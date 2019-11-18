@@ -1,1 +1,3 @@
 backgrounds/
+static/users/*/*
+!static/users/*/favorites.json

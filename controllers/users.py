@@ -36,6 +36,10 @@ def convert_from_json(all_users):
 				fh.write(data)
 	return
 
+def read_favorites_json(user):
+	with open("static/users/{}/favorites.json".format(user)) as fh:
+		j = json.loads(fh.read())
+	return j
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()

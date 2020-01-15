@@ -11,7 +11,7 @@ def format_profile_html(category, item):
 		header = "{}".format(data[0]) if category == "quotes" else "{} - {}".format(data[1], data[0])
 		html = "<div class='title'>{}</div>".format(header)
 		html += "<div class='quote'>{}</div>".format(data[2].replace("\\n", "<br>"))
-		html += "<div>—</div>"
+		html += "<div>-</div>"
 	return html
 
 def get_profile_html(user, favorites):

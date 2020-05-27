@@ -1,4 +1,5 @@
 backgrounds/
 controllers/__pycache*
+controllers/*.pyc
 static/users/*/*
 !static/users/*/favorites.json

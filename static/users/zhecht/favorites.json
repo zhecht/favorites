@@ -14,7 +14,13 @@
         "jogging baboon|Bojack Horseman S2 Finale|It gets easier... Every day it gets a little easier... But you gotta do it every day - that's the hard part. But it does get easier.",
         "Michael Scott|The Office S?E?|Limitless paper in a paperless world.",
         "Albert Einstein||I do not know with what weapons World War III will be fought, but World War IV will be fought with sticks and stones.",
-        "Ryan Ray|Halt and Catch Fire S3E8|I, Ryan Ray, released the MacMillan Utility source code. I acted alone. No one helped me, and no one told me to do it. I did this because \"security\" is a myth. Contrary to what you might have heard, my friends, you are NOT safe.\\nSafety is a story. It's something we teach our children, so they can sleep at night. But we know it's not real.\\nBeware baffled humans. Beware of false prophets who will sell you a fake future - of bad teachers, corrupt leaders and dirty corporations. Beware of cops and robbers. The kind that rob your dreams. But most of all, beware of each other. Because everything's about to change.\\nThe world is going to crack wide open. There's something on the horizon - a massive connectivity. The barriers between us will disappear. And we're not ready.\\nWe'll hurt each other in new ways. We'll sell and be sold. We'll expose our most tender selves only to be mocked and destroyed. We'll be so vulnerable and we'll pay the price. We won't be able to pretend that we can protect ourselves anymore. It's a huge danger. A gigantic risk. But it's worth it.\\nIf only we can learn to take care of each other. Then this awesome, destructive new connection won't isolate us. It won't leave us in the end so.. totally alone."
+        "Ryan Ray|Halt and Catch Fire S3E8|I, Ryan Ray, released the MacMillan Utility source code. I acted alone. No one helped me, and no one told me to do it. I did this because \"security\" is a myth. Contrary to what you might have heard, my friends, you are NOT safe.\\nSafety is a story. It's something we teach our children, so they can sleep at night. But we know it's not real.\\nBeware baffled humans. Beware of false prophets who will sell you a fake future - of bad teachers, corrupt leaders and dirty corporations. Beware of cops and robbers. The kind that rob your dreams. But most of all, beware of each other. Because everything's about to change.\\nThe world is going to crack wide open. There's something on the horizon - a massive connectivity. The barriers between us will disappear. And we're not ready.\\nWe'll hurt each other in new ways. We'll sell and be sold. We'll expose our most tender selves only to be mocked and destroyed. We'll be so vulnerable and we'll pay the price. We won't be able to pretend that we can protect ourselves anymore. It's a huge danger. A gigantic risk. But it's worth it.\\nIf only we can learn to take care of each other. Then this awesome, destructive new connection won't isolate us. It won't leave us in the end so.. totally alone.",
+        "CGP Grey||Even just decelerating the negative is a positive",
+        "Victor Wooten|Tedx Talk|When we see something bad or awful or horrible in life, maybe we're just viewing it in the wrong octave",
+        "Isabelle|To The Moon (1h47m)|Me, I\u2019ve been an actress all my life. Not only on-stage, but off-stage\u2026and at practically every moment. I\u2019ve gotten good at it, because acting is the only option I have. It\u2019s the only way for me to be normal. There are days when I just can\u2019t fake it anymore. And then I realize that it\u2019s too late. The Isabelle that people know of is all an act, and the real me has long become a stranger.",
+        "Act 1|Finding Paradise|Not Everyones story is meant to be told\u2026 Some of them are meant to be kept",
+        "Lenin|Nov. 1917|There are decades when nothing happens and weeks when decades happen",
+        "Victor Wooten|Tedx Talk|When people put you up on a pedestal, don't come off the pedestal acting like you're humble.\\nStay up on that pedestal, because if they put you there, that's showing you how high they can see.\\nStay there and then pull them up!\\nAnd they'll grow faster than if you come down."
     ],
     "tv": [
         "Dark",
@@ -50,18 +56,25 @@
         "The OA",
         "After Life",
         "About Time",
-        "Veep"
+        "Veep",
+        "The Outsider",
+        "Sex Education",
+        "True Detective"
     ],
     "podcasts": [
+        "Darknet Diaries",
         "Stay Free: The Story of The Clash",
+        "99% Invisible",
+        "Office Ladies",
         "How did this get made",
         "Radiolab",
-        "Darknet Diaries",
-        "99% Invisible"
+        "Underunderstood"
     ],
     "movies": [
         "Dunkirk",
         "Baby Driver",
+        "Knives Out",
+        "Just Mercy",
         "Mindhunters",
         "Mudbound",
         "Isle Of Dogs",
@@ -69,9 +82,11 @@
         "Forgetting Sarah Marshall",
         "Sing Street",
         "Upgrade",
-        "Spiderman: Into the spider verse"
+        "Spiderman: Into the spider verse",
+        "Catch me if you can"
     ],
     "documentaries": [
+        "Chernobyl",
         "The Spy",
         "Aaron Swartz",
         "American Animals",
@@ -90,16 +105,26 @@
         "Fyre Festival",
         "AlphaGo",
         "Zero Days",
-        "An Honest Liar (Randi magician)"
+        "An Honest Liar (Randi magician)",
+        "The Trials of Gabriel Fernandez"
     ],
     "games": [
+        "Life is Strange 2",
+        "Life is Strange: Before the Storm",
+        "To The Moon",
+        "Life is Strange",
+        "Finding Paradise",
+        "Stardew Valley",
+        "A Bird's Story",
+        "Firewatch",
         "Spy Fox",
         "Freddi The Fish",
         "Lego Island",
         "Lego Racers 1/2",
         "Putt-putt",
         "M&M: The lost formulas",
-        "Tonka Construction"
+        "Tonka Construction",
+        "Supraland"
     ],
     "music_documentaries": [
         "The Wrecking Crew",

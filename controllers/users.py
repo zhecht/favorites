@@ -41,6 +41,11 @@ def read_favorites_json(user):
 		j = json.loads(fh.read())
 	return j
 
+def write_favorites_json(favorites, user):
+	with open("static/users/{}/favorites.json".format(user), "w") as fh:
+		json.dump(favorites, fh, indent=4)
+	return
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-convert_to_json", "--convert_to_json", action="store_true", help="Convert users data to JSON")

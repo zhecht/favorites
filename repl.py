@@ -1,8 +1,9 @@
 
 
 from controllers.users import *
-from subprocess import check_output
+from subprocess import check_output, call
 
+import textwrap
 
 def print_categories(favorites, state):
 	categories = list(favorites.keys())
@@ -19,7 +20,9 @@ def print_question(favorites, state):
 	print("cat: {}".format(state["category"]))
 	if state["category"] in ["quotes", "lyrics"] or len(favorites[state["category"]]) < 10:
 		for idx, data in enumerate(favorites[state["category"]]):
-			print("\t{0}: {1}".format(idx, format_item(data, state["category"])))
+			print("\n\t{}: ".format(idx), end="")
+			print_item(data, state["category"])
+			#print("{0:8}{1}: {2}".format("", idx, print_item(data, state["category"])))
 	else:
 		tot_per_column = int(len(favorites[state["category"]]) / 3)
 		data1 = favorites[state["category"]][:tot_per_column]
@@ -34,14 +37,19 @@ def print_question(favorites, state):
 			for idx, item in enumerate(data3[tot_per_column:]):
 				print("\t{0:92}: {1}".format(idx + tot_per_column + (tot_per_column*2), item))
 		
-	print("(a)dd, (d)elete, (r)ank, (c)hange, (s)ave: ", end="")
+	print("(a)dd, (d)elete, (e)dit, (r)ank, (c)hange, (s)ave: ", end="")
 	return input()
 
-def format_item(item, category):
+def print_item(item, category):
 	if category in ["quotes", "lyrics"]:
 		data = item.split("|")
-		return "{} - {}\n\t\t{}".format(data[0], data[1], data[2].replace("\\n", "\n\t\t"))
-	return item
+		print("{0} - {1}".format(data[0], data[1]))
+		lines = data[2].split("\\n")
+		for line in lines:
+			print(textwrap.fill(line, width=100, initial_indent='\t\t', subsequent_indent='\t\t'))
+		return
+		#return "{0} - {1}\n\t\t{2}".format(data[0], data[1], data[2].replace("\\n", "\n\t\t"))
+	print(item)
 
 def rotate_item(favorites, state, idx, delta):
 	item = favorites[state["category"]][idx]
@@ -68,12 +76,21 @@ def rank_item(favorites, state, action):
 def add_item(favorites, state, action):
 	new_idx = len(favorites[state["category"]])
 	item = " ".join(action.split(" ")[1:])
-	try:
-		# if ranking was given
-		new_idx = int(action[-1])
-		item = item[:-2]
-	except:
-		print("no ranking, adding to bottom")
+
+	if not item:
+		# open vim for longer input
+		call(["rm", "-f", "add.txt"])
+		call(["vim", "add.txt"])
+		add_text = open("add.txt").read()
+		if add_text:
+			item = add_text
+	else:
+		try:
+			# if ranking was given
+			new_idx = int(action[-1])
+			item = item[:-2]
+		except:
+			print("no ranking, adding to bottom")
 
 	favorites[state["category"]].insert(new_idx, item.replace("\"", ""))
 	write_favorites_json(favorites, state["user"])
@@ -118,6 +135,8 @@ if __name__ == '__main__':
 			add_item(favorites, state, action)
 		elif command in ["d", "delete"]:
 			delete_item(favorites, state, action)
+		elif command in ["e", "edit"]:
+			edit_item(favorites, state, action)
 		elif command in ["c", "change"]:
 			state["category"] = action[len(command) + 1:]
 		elif command == "r" or command == "rank":

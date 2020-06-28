@@ -4,9 +4,7 @@
 	<div id="header">{{user}}</div>
 	{{ category_html | safe }}
 </div>
-<div id="item_content">
-
-</div>
+<div id="item_content"></div>
 <script>
 	var user = "{{user}}";
 	var user_data = JSON.parse('{{profile_data | tojson}}');

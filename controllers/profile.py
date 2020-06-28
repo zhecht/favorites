@@ -31,23 +31,47 @@ def get_category_html(user, favorites):
 	leftover_cats = list(set(ALL_CATS) - set([cat for cat in favorites]))
 	for cat in leftover_cats:
 		html += "<span id='{}'>{} (0)</span>".format(cat, cat.replace("_", " "))
+	html += "<span id='add_cat_btn'>Add (+)</span>"
 	html += "</div>"
 	return html
 
 def format_data(favorites):
 	data = {}
 	for cat in ALL_CATS:
-		data[cat] = {}
+		data[cat] = []
 		if cat in favorites:
-			data[cat] = [res.replace("\"", "&#34;").split("\\n") for res in favorites[cat]]
+			data[cat] = ["<br>".join(res.replace("\"", "&#34;").split("\\n")) for res in favorites[cat]]
 	return data
 
 @profile.route("/profile/<user>", methods=["GET"])
 def profile_route(user):
 	favorites = users_controller.read_favorites_json(user)
 	category_html = get_category_html(user, favorites)
-	#print(json.dumps(favorites))
 	return render_template("profile.html", user=user, category_html=category_html, profile_data=format_data(favorites))
+
+@profile.route("/profile/<user>/add_cat", methods=["POST"])
+def profile_add_cat(user):
+	new_cat = request.args.get("cat").replace(" ", "_").lower()
+	favorites = users_controller.read_favorites_json(user)
+	favorites[new_cat] = []
+	users_controller.write_favorites_json(favorites, user)
+	return jsonify({"success": 1})
 
 @profile.route("/profile/<user>/reassign", methods=["POST"])
 def profile_reassign_ranks(user):
+	cat = request.args.get("cat")
+	order = request.args.get("order").split(",")
+	is_new = request.args.get("is_new")
+	new_val = request.args.get("new_val")
+	
+	# VALIDATE
+	favorites = users_controller.read_favorites_json(user)
+	new_arr = []
+	for idx in order:
+		if idx == "new":
+			new_arr.append(new_val)
+		else:
+			new_arr.append(favorites[cat][int(idx)])
+	favorites[cat] = new_arr
+	users_controller.write_favorites_json(favorites, user)
+	return jsonify({"success": 1})

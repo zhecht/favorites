@@ -5,8 +5,19 @@
 	{{ category_html | safe }}
 </div>
 <div id="item_content"></div>
+<div id="edit_dialog">
+	<div>
+		<textarea id="edit_input"></textarea>
+	</div>
+	<div>
+		<button class="save">Save</button>
+		<button class="remove">Remove</button>
+		<button class="cancel">Cancel</button>
+	</div>
+</div>
 <script>
 	var user = "{{user}}";
 	var user_data = JSON.parse('{{profile_data | tojson}}');
+	var autocomplete = JSON.parse('{{autocomplete_arr | tojson}}');
 </script>
 {% endblock %}

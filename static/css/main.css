@@ -10,8 +10,22 @@ body {
 	width: 20%;
 }
 
+#edit_dialog {
+	position: absolute;
+	display: none;
+	z-index: 2000;
+	top: 25%; left: 25%;
+	width: 50%;
+	flex-direction: column;
+	text-align: center;
+}
+#edit_input {
+	width: 300px;
+}
+
 #item_content {
 	width: 80%;
+	height: max-content;
 	display: flex;
 	flex-wrap: wrap;
 }
@@ -55,6 +69,7 @@ body {
 
 .cat_items span{
 	position: relative;
+	padding: 0 10px;
 }
 
 .cat_items:hover {
@@ -68,8 +83,19 @@ body {
 	margin: 7% 0 5% 5%;
 }
 
-#cat_item_add_input {
+#cat_item_add_input, #cat_item_add_song_input {
 	width: 90%;
+}
+
+#cat_item_add_song_input, #cat_item_add_input_duration_div {
+	display: none;
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+#cat_item_add_input_duration {
+	width: 30px;
+	margin: 0 5px;
 }
 
 #add_cat_input {
@@ -137,6 +163,11 @@ body {
 	border-bottom: 1px solid;
 	font-size: 14px;
 	padding: 5px 0;
+}
+
+.autocomplete-active {
+	background-color: DodgerBlue !important;
+	color: #fff;
 }
 
 #container {

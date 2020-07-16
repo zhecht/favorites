@@ -5,10 +5,10 @@
 function init_autocomplete(input, arr) {
 	var current_focus;
 	input.addEventListener("input", function(e) {
-		var div,match_div,val = this.value;
+		var div, match_div, val = this.value;
 		closeAllLists();
 		if (!val) { return false; }
-		current_focus -=1;
+		current_focus = -1;
 		div = document.createElement("div");
 		div.id = this.id+"autocomplete-list";
 		div.className = "autocomplete-items";

@@ -23,14 +23,15 @@
         "Victor Wooten|Tedx Talk|When people put you up on a pedestal, don't come off the pedestal acting like you're humble.\\nStay up on that pedestal, because if they put you there, that's showing you how high they can see.\\nStay there and then pull them up!\\nAnd they'll grow faster than if you come down."
     ],
     "television": [
-        "Dark",
         "Halt and Catch Fire",
+        "BoJack Horseman",
+        "Dark",
         "Mr Robot",
-        "Chuck",
         "Psych",
         "Legion",
         "Love",
         "Archer",
+        "Chuck",
         "Nathan For You",
         "Community",
         "Patriot",
@@ -43,11 +44,11 @@
         "Greek",
         "Waco",
         "Atypical",
-        "better off ted",
+        "Better Off Ted",
         "Veep",
         "Silicon Valley",
         "True Detective",
-        "The end of the fucking world",
+        "The End of the F***ing World",
         "Dirty Money",
         "Timeless",
         "Maniac",
@@ -78,6 +79,7 @@
         "Knives Out",
         "Just Mercy",
         "Mindhunters",
+        "Up",
         "Mudbound",
         "Isle Of Dogs",
         "Forgetting Sarah Marshall",
@@ -120,11 +122,13 @@
         "Finding Paradise",
         "A Bird's Story",
         "Supraland",
+        "Modern Warfare",
+        "Fortnite",
         "Spy Fox",
         "Freddi The Fish",
         "Lego Island",
         "Lego Racers 1/2",
-        "Putt-putt",
+        "Putt-Putt: Saves the Zoo",
         "Tonka Construction",
         "M&M: The lost formulas"
     ],
@@ -136,5 +140,32 @@
         "Muscle Shoals",
         "Sugar Man",
         "Bob and the Monster"
-    ]
+    ],
+    "riffs": [
+        "F7nCDrf90V8_2",
+        "jftpg_6SUYk",
+        "KaBBWWj5h_c_2",
+        "NNm7kY2-G7g",
+        "QoI6f3drCWY",
+        "-ZKUKA4WpUw",
+        "VSBxCgj3Vck_2"
+    ],
+    "memories": [
+        "Watching shooting stars with dad during camping trip",
+        "Winning world series with mom coaching",
+        "Living in The Lodge @ Towanda (Club year)",
+        "Barmitzvah   video",
+        "Winning rope burn as head animal"
+    ],
+    "books": [
+        "Scar Tissue"
+    ],
+    "beer": [
+        "Two Hearted Ale [Bell's]",
+        "Red's Rye IPA [Founders]",
+        "Hopslam Double IPA [Bell's]",
+        "All Day IPA [Founders]",
+        "Hamms"
+    ],
+    "songs": []
 }

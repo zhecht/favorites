@@ -45,6 +45,27 @@ function get_category_add_html() {
 
 	autocomplete.appendChild(input);
 
+	input = document.createElement("input");
+	input.placeholder = "Song";
+	input.id = "cat_item_add_song_input";
+	input.type = "text";
+
+	autocomplete.appendChild(input);
+
+	var innerdiv = document.createElement("div");
+	innerdiv.id = "cat_item_add_input_duration_div";
+
+	var input = document.createElement("input");
+	input.placeholder = "10";
+	input.id = "cat_item_add_input_duration";
+	input.type = "text";
+
+	innerdiv.appendChild(document.createTextNode("duration:"));
+	innerdiv.appendChild(input);
+	innerdiv.appendChild(document.createTextNode("seconds"));
+
+	autocomplete.appendChild(innerdiv);
+
 	var span = document.createElement("span");
 	span.id = "cat_item_add_text";
 	span.innerText = "Drag to desired rank when complete";
@@ -56,18 +77,62 @@ function get_category_add_html() {
 	return div;
 }
 
+function cancel_edit() {
+	document.getElementById("darkened_back").style.display = "none";
+	document.getElementById("edit_dialog").style.display = "none";
+}
+
+function remove_cat_item() {
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", "/profile/{}/edit_cat_item?remove=1&cat={}&idx={}".format(user, CURR_CAT, EDITING));
+	xhr.send();
+	document.getElementsByClassName("cat_items")[EDITING].remove();
+	cancel_edit();
+	var no_backend = true;
+	reassign_ids(no_backend);
+
+}
+
+function save_cat_item_edit() {
+
+}
+
+function edit_cat_item(el) {
+	var idx = parseInt(el.target.id);
+	EDITING = idx;
+	document.getElementById("darkened_back").style.display = "flex";
+	document.getElementById("edit_dialog").style.display = "flex";
+	var txt = user_data[CURR_CAT][idx];
+	document.getElementById("edit_input").value = txt;
+}
+
+function hover(el) {
+	if (CURR_CAT == "quotes" || CURR_CAT == "lyrics") {
+		console.log(el.target.getElementsByTagName("div")[1]);
+		el.target.getElementsByTagName("div")[1].style.overflow = "visible";
+	}
+}
+
 function create_cat_item(num) {
 	var div = document.createElement("div");
 	var source;
 	div.className = "cat_items";
 	div.id = "cat_item_"+num;
 	div.draggable = true;
-	if (CURR_CAT == "quotes" || CURR_CAT == "lyrics") {
+	if (CURR_CAT == "quotes" || CURR_CAT == "lyrics" || CURR_CAT == "riffs") {
 		div.style.width = "300px";
+		div.style.height = "300px";
+		document.getElementById("cat_item_add").style.width = "300px";
 	}
 
+	div.onclick = function(event) {
+		edit_cat_item(event);
+	};
 	div.ondragstart = function(event){
 		drag(event);
+	};
+	div.onmouseenter = function(event) {
+		hover(event);
 	};
 	var span = document.createElement("span");
 	var circle = document.createElement("div");
@@ -78,17 +143,58 @@ function create_cat_item(num) {
 	span.appendChild(circle);
 	if (num === "new") {
 		var new_text = document.getElementById("cat_item_add_input").value;
-		if (!new_text || user_data[CURR_CAT].indexOf(new_text) !== -1) {
+		if (CURR_CAT == "songs") {
+			var song = document.getElementById("cat_item_add_song_input").value;
+			
+			if (!new_text || !song || user_data[CURR_CAT].indexOf(song) !== -1) {
+				return false;
+			}
+		} else if (!new_text || user_data[CURR_CAT].indexOf(new_text) !== -1) {
 			return false;
+		}
+		if (CURR_CAT == "riffs") {
+			var duration = document.getElementById("cat_item_add_input_duration").value;
+			if (!duration) { duration = "end"; }
+
+			var URL = "/profile/{}/get_video?url={}&duration={}".format(user, encodeURIComponent(new_text), duration);
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var res = JSON.parse(xhr.responseText);
+					var vid = document.createElement("video");
+					vid.controls = true;
+					vid.volume = 0.5;
+					vid.src = "/static/videos/"+res["youtube_id"]+".mp4";
+					vid.style.width = "250px";
+					body.appendChild(vid);
+					body.appendChild(document.createTextNode(res["title"]));
+					span.appendChild(body);
+					div.appendChild(span);
+					var drop_in;
+					if (DROPPING == 0) {
+						// making #1 rank
+						drop_in = document.getElementById("cat_item_add");
+					} else {
+						drop_in = document.getElementById("cat_item_"+(DROPPING-1));
+					}
+					insertAfter(drop_in, div);
+					vid.pause();
+					reassign_ids();
+				}
+			};
+			xhr.open("POST", URL);
+			xhr.send();
+			return;
 		}
 		body.appendChild(document.createTextNode(new_text));
 	} else {
 		var data, extra_data = {};
 		if (user_data[CURR_CAT][num].indexOf("|") != -1) {
-			body.style["text-align"] = "left";
+			body.style["margin"] = "10px 0";
+			body.style["overflow"] = "hidden";
+			body.style["max-height"] = "150px";
 			data = user_data[CURR_CAT][num].split("|");
 			if (CURR_CAT == "lyrics" || CURR_CAT == "quotes") {
-				body.appendChild(document.createTextNode("\""));
 				extra_data["artist"] = data[0];
 				extra_data["source"] = data[1];
 			}
@@ -105,21 +211,34 @@ function create_cat_item(num) {
 			}
 			span.appendChild(document.createElement("br")); */
 			
+		} else if (CURR_CAT == "riffs") {
+			var vid = document.createElement("video");
+			vid.controls = true;
+			vid.volume = 0.5;
+			vid.src = "/static/videos/"+user_data[CURR_CAT][num].split("\t")[0]+".mp4";
+			vid.style.width = "250px";
+			body.appendChild(vid);
+			data = [user_data["riff_titles"][num].title];
 		} else {
 			data = user_data[CURR_CAT][num].split("<br>");
 		}
 		for (var j = 0; j < data.length; ++j) {
-			body.appendChild(document.createTextNode(data[j]));
+			var txt = data[j].replace(/&#34;/g, "\"");
+			body.appendChild(document.createTextNode(txt));
 			if (j + 1 != data.length) {
 				body.appendChild(document.createElement("br"));
 			}
 		}
 	}
-	if (CURR_CAT == "lyrics" || CURR_CAT == "quotes") {
-		body.appendChild(document.createTextNode("\""));
-		//span.appendChild(document.createElement("br"));
+	if (CURR_CAT == "quotes") {
 		span.appendChild(body);
-		span.appendChild(document.createTextNode("{} ({})".format(extra_data["artist"],extra_data["source"])));
+		span.appendChild(document.createTextNode(extra_data["artist"]));
+		//span.appendChild(document.createTextNode("{} ({})".format(extra_data["artist"],extra_data["source"])));
+	} else if (CURR_CAT == "lyrics") {
+		span.appendChild(body);
+		span.appendChild(document.createTextNode(extra_data["source"]));
+		span.appendChild(document.createElement("br"));
+		span.appendChild(document.createTextNode(extra_data["artist"]));
 	} else {
 		span.appendChild(body);
 	}
@@ -155,19 +274,28 @@ function drop(ev) {
 	DROPPING = parseInt(sp[sp.length - 1]);
 	var data = ev.dataTransfer.getData("text");
 	data = document.getElementById(data);
-	console.log(ev.target.id, DRAGGING, DROPPING);
+
+	console.log(ev, ev.target.id, DRAGGING, DROPPING);
+	var target_id = ev.target.id;
+	if (ev.tagName == "VIDEO") {
+		target_id = ev.target.parentNode.parentNode.id;
+		DROPPING = target_id;
+	} else if (!target_id || target_id == "") {
+		target_id = ev.target.parentNode.id;
+		DROPPING = target_id;
+	}
 	if (DRAGGING === "add") {
 		data = create_cat_item("new");
 		if (!data) { return; }
 	}
 
-	if (ev.target.id !== "item_content") {
+	if (target_id !== "item_content") {
 		if (DRAGGING !== "add" && DRAGGING < DROPPING) {
-			if (ev.target.id.startsWith("cat_item_")) {
+			if (target_id.startsWith("cat_item_")) {
 				insertAfter(ev.target, data);
 			} else {
 				// id is just a NUM (dropped inside a span)
-				var div = document.getElementById("cat_item_"+ev.target.id);
+				var div = document.getElementById("cat_item_"+target_id);
 				insertAfter(div, data);
 			}
 		} else {

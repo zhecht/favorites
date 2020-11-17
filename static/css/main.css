@@ -1,5 +1,7 @@
 body {
 	margin: 0;
+	background: rgb(24, 26, 27);
+	color: white;
 }
 
 #content {
@@ -58,7 +60,7 @@ body {
 
 .cat_items, #cat_item_add {
 	display: table;
-	height: 200px; width: 250px;
+	height: 200px; width: 20%;
 	text-align: center;
 }
 

@@ -78,7 +78,7 @@ def profile_route(user):
 	favorites = users_controller.read_favorites_json(user)
 	category_html = get_category_html(user, favorites)
 	autocomplete_arr = get_autocomplete_arr(favorites)
-	return render_template("profile.html", user=user, category_html=category_html, profile_data=format_data(favorites), autocomplete_arr=autocomplete_arr)
+	return render_template("profile.html",user=user, category_html=category_html, profile_data=format_data(favorites), autocomplete_arr=autocomplete_arr, condense=True)
 
 
 @profile.route("/profile/<user>/get_video", methods=["POST"])

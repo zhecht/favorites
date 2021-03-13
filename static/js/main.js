@@ -4,6 +4,7 @@ var CURR_CAT;
 var EDITING;
 var ALL_CATS = [];
 var changes = [];
+var CONDENSE = false;
 
 function reassign_ids(no_backend=undefined) {
 	var cat_items = document.getElementsByClassName("cat_items");
@@ -116,7 +117,6 @@ function add_category_item() {
 	var add_div = document.getElementById("cat_item_add");
 	var add_div_span = add_div.getElementsByTagName("span")[0];
 	add_div_span.style["vertical-align"] = "top";
-	add_div_span.style["padding-top"] = "50px";
 	document.getElementById("add_text").style.display = "block";
 	document.getElementById("cat_item_add_text").style.display = "block";
 	var input = document.getElementById("cat_item_add_input");
@@ -138,7 +138,7 @@ function add_category_item() {
 	add_div.ondragstart = function(event) {
 		drag(event);
 	}
-	document.getElementById("cat_item_add_autocomplete").style.display = "block";
+	document.getElementById("cat_item_autocomplete_div").style.display = "flex";
 	if (CURR_CAT != "riffs") {
 		input.focus();
 	}
@@ -158,15 +158,61 @@ function click_category(cat) {
 	var item_content = document.getElementById("item_content");
 	item_content.innerHTML = "";
 	item_content.appendChild(get_category_add_html());
-	for (var i = 0; i < user_data[cat].length; ++i) {
-		item_content.appendChild(create_cat_item(i));
+
+	//var section = document.createElement("div");
+	//section.className = "section";
+	var len = user_data[cat].length;
+	var width = 100 / Math.ceil(len / 8);
+	//section.style.width = width+"%";
+	for (var i = 0; i < len; ++i) {
+		if (CONDENSE) {
+			item_content.appendChild(create_cat_item(i));
+			/*
+			section.appendChild(create_cat_item(i));
+			if (i >= 8 && i % 8 == 0) {
+				item_content.appendChild(section);
+				section = document.createElement("div");
+				section.className = "section";
+				section.style.width = width+"%";
+			}*/
+		} else {
+			item_content.appendChild(create_cat_item(i));
+		}
+	}
+	if (CONDENSE) {
+		//item_content.appendChild(section);
 	}
 	document.getElementById(cat).className = "clicked_header";
 }
 
+// from overview page -> detailed page
+function expand_category(cat) {
+	document.getElementById("content").style.height = "auto";
+	document.getElementById("category_headers").style.display = "flex";
+	var cats = document.getElementById("category_headers").getElementsByTagName("span");
+	for (var i = 0; i < cats.length; ++i) {
+		cats[i].style.opacity = 1;
+	}
+	click_category(cat);
+}
+
 
 // HANDLERS
-var categories = document.getElementById("category_headers").getElementsByTagName("span");
+document.getElementById("header").onclick = function() {
+	window.location.reload();
+};
+
+var categories = document.getElementsByClassName("category_box");
+for (var i = 0; i < categories.length; ++i) {
+	var cat_name = categories[i].getElementsByClassName("category_header")[0].innerText.split(" (")[0];
+	categories[i].onclick = (function(cat) {
+		return function() {
+			expand_category(cat);
+		}
+	})(cat_name);
+}
+
+categories = document.getElementById("category_headers").getElementsByTagName("span");
 for (var i = 0; i < categories.length; ++i) {
 	if (categories[i].id !== "add_cat_btn") {
 		ALL_CATS.push(categories[i].id);

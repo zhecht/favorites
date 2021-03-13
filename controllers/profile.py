@@ -38,6 +38,27 @@ def get_category_html(user, favorites):
 	html += "</div>"
 	return html
 
+def format_overview(cat, row):
+	if cat in ["quotes"]:
+		artist = row.split("|")[0]
+		data = row.split("|")[2].replace("\\n", "<br>")
+		return f"<div class='quote'>{data}</div><div>{artist}</div>"
+	return row
+
+def get_home_page_html(user, favorites):
+	html = "<div id='home_page_div'>"
+	sorted_categories = categories_sorted_by_count(favorites)
+	for cat, cat_count in sorted_categories:
+		html += "<div class='category_box'>"
+		html += f"<div class='category_header'>{cat} ({cat_count})</div>"
+		for idx, row in enumerate(favorites[cat]):
+			row = format_overview(cat, row)
+			html += f"<div class='row'><div class='circle'>{idx+1}</div><div class='text'>{row}</div></div>"
+		html += "<div class='shadow'>Click to Expand</div>"
+		html += "</div>"
+	html += "</div>"
+	return html
+
 def get_autocomplete_arr(favorites):
 	data = {}
 	for key in favorites:
@@ -76,9 +97,10 @@ def format_data(favorites):
 @profile.route("/profile/<user>", methods=["GET"])
 def profile_route(user):
 	favorites = users_controller.read_favorites_json(user)
-	category_html = get_category_html(user, favorites)
+	category_header_html = get_category_html(user, favorites)
+	category_html = get_home_page_html(user, favorites)
 	autocomplete_arr = get_autocomplete_arr(favorites)
-	return render_template("profile.html",user=user, category_html=category_html, profile_data=format_data(favorites), autocomplete_arr=autocomplete_arr, condense=True)
+	return render_template("profile.html",user=user, category_html=category_html, category_header_html=category_header_html, profile_data=format_data(favorites), autocomplete_arr=autocomplete_arr, condense=True)
 
 
 @profile.route("/profile/<user>/get_video", methods=["POST"])

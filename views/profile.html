@@ -2,9 +2,11 @@
 {% block content %}
 <div id="sidebar">
 	<div id="header">{{user}}</div>
+	{{ category_header_html | safe }}
+</div>
+<div id="item_content">
 	{{ category_html | safe }}
 </div>
-<div id="item_content"></div>
 <div id="edit_dialog">
 	<div>
 		<textarea id="edit_input"></textarea>
@@ -20,4 +22,48 @@
 	var user_data = JSON.parse('{{profile_data | tojson}}');
 	var autocomplete = JSON.parse('{{autocomplete_arr | tojson}}');
 </script>
+{% if condense %}
+	<style>
+		.cat_items {
+			width: 20%;
+			padding: 15px 0;
+		}
+		.cat_items span {
+			padding: 0 10px;
+		}
+		#cat_item_add {
+			padding: 25px 0;
+			padding-bottom: 0px;
+			width: 100%;
+		}
+		#cat_item_add_autocomplete {
+			width: 100%;
+			margin: 10px 0;
+		}
+		#cat_item_add_input, #cat_item_add_song_input {
+			width: 300px;
+		}
+	</style>
+{% else %}
+	<style>
+		.cat_items, #cat_item_add {
+			height: 200px;
+			width: 20%;
+		}
+		.cat_items span {
+			position: relative;
+			padding: 0 10px;
+		}
+		#cat_item_add_autocomplete {
+			width: 90%;
+			margin: 7% 0 5% 5%;
+		}
+		#add_text {
+			padding-top: 50px;
+		}
+		#cat_item_add_input, #cat_item_add_song_input {
+			width: 90%;
+		}
+	</style>
+{% endif %}
 {% endblock %}

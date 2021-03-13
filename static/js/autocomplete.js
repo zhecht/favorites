@@ -9,10 +9,13 @@ function init_autocomplete(input, arr) {
 		closeAllLists();
 		if (!val) { return false; }
 		current_focus = -1;
+		var autoDiv = document.createElement("div");
+		autoDiv.className = "autocomplete-div";
 		div = document.createElement("div");
 		div.id = this.id+"autocomplete-list";
 		div.className = "autocomplete-items";
-		this.parentNode.appendChild(div);
+		autoDiv.appendChild(div);
+		this.parentNode.appendChild(autoDiv);
 
 		for (var i = 0; i < arr.length; ++i) {
 			if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {

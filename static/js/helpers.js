@@ -34,6 +34,8 @@ function get_category_add_html() {
 	span.style.color = "green";
 	div.appendChild(span);
 
+	var autocompleteDiv = document.createElement("div");
+	autocompleteDiv.id = "cat_item_autocomplete_div"
 	var autocomplete = document.createElement("div");
 	autocomplete.id = "cat_item_add_autocomplete";
 	autocomplete.className = "autocomplete";
@@ -71,7 +73,8 @@ function get_category_add_html() {
 	span.innerText = "Drag to desired rank when complete";
 	span.style.display = "none";
 
-	div.appendChild(autocomplete);
+	autocompleteDiv.appendChild(autocomplete);
+	div.appendChild(autocompleteDiv);
 	div.appendChild(span);
 
 	return div;
@@ -108,8 +111,8 @@ function edit_cat_item(el) {
 
 function hover(el) {
 	if (CURR_CAT == "quotes" || CURR_CAT == "lyrics") {
-		console.log(el.target.getElementsByTagName("div")[1]);
-		el.target.getElementsByTagName("div")[1].style.overflow = "visible";
+		//console.log(el.target.getElementsByTagName("div")[1]);
+		//el.target.getElementsByTagName("div")[1].style.overflow = "visible";
 	}
 }
 
@@ -121,7 +124,7 @@ function create_cat_item(num) {
 	div.draggable = true;
 	if (CURR_CAT == "quotes" || CURR_CAT == "lyrics" || CURR_CAT == "riffs") {
 		div.style.width = "300px";
-		div.style.height = "300px";
+		div.style.height = "400px";
 		document.getElementById("cat_item_add").style.width = "300px";
 	}
 
@@ -192,7 +195,7 @@ function create_cat_item(num) {
 		if (user_data[CURR_CAT][num].indexOf("|") != -1) {
 			body.style["margin"] = "10px 0";
 			body.style["overflow"] = "hidden";
-			body.style["max-height"] = "150px";
+			body.style["max-height"] = "300px";
 			data = user_data[CURR_CAT][num].split("|");
 			if (CURR_CAT == "lyrics" || CURR_CAT == "quotes") {
 				extra_data["artist"] = data[0];

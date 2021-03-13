@@ -144,6 +144,7 @@ function create_cat_item(num) {
 	circle.innerText = num+1;
 	span.id = num;
 	span.appendChild(circle);
+	body.style["padding-left"] = "10px";
 	if (num === "new") {
 		var new_text = document.getElementById("cat_item_add_input").value;
 		if (CURR_CAT == "songs") {

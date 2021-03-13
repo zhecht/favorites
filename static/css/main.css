@@ -86,7 +86,9 @@ body {
 
 .cat_items, #cat_item_add {
 	display: table;
-	text-align: center;
+}
+
+#cat_item_add {
 }
 
 .cat_items span, #cat_item_add span {
@@ -97,6 +99,11 @@ body {
 .cat_items:hover {
 	background: blue;
 	cursor: pointer;
+}
+
+.cat_items span {
+	display: flex;
+	align-items: center;
 }
 
 #cat_item_autocomplete_div {
@@ -134,8 +141,13 @@ body {
 	margin-left:5px;
 }
 
+#add_text {
+	text-align: center;
+}
+
 #cat_item_add_text {
 	display: none;
+	text-align: center;
 }
 
 #add_cat_btn {
@@ -203,7 +215,7 @@ body {
 	line-height: 30px;
 	font-size: 12px;
 	border: 1px solid;
-	margin-left: calc(calc(100% - 30px) / 2);
+	text-align: center;
 }
 
 #home_page_div .circle {
@@ -225,7 +237,8 @@ body {
 
 .autocomplete {
 	position: relative;
-	display: inline-block;
+	display: flex;
+	justify-content: center;
 }
 
 .autocomplete-items {

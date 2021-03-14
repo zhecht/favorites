@@ -27,12 +27,17 @@ body {
 	width: 300px;
 }
 
-#item_content {
+#main_content {
 	width: 80%;
-	display: flex;
-	flex-wrap: wrap;
+	height: 100vh;
 	color: black;
 	background-color: white;
+}
+
+#item_content {
+	display: flex;
+	flex-flow: column wrap;
+	height: 90vh;
 }
 
 

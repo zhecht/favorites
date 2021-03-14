@@ -155,9 +155,11 @@ function click_category(cat) {
 		return;
 	}
 	CURR_CAT = cat;
-	var item_content = document.getElementById("item_content");
-	item_content.innerHTML = "";
-	item_content.appendChild(get_category_add_html());
+	let mainContent = document.getElementById("main_content");
+	let itemContent = document.createElement("div");
+	itemContent.id = "item_content";
+	mainContent.innerHTML = "";
+	mainContent.appendChild(get_category_add_html());
 
 	//var section = document.createElement("div");
 	//section.className = "section";
@@ -166,7 +168,7 @@ function click_category(cat) {
 	//section.style.width = width+"%";
 	for (var i = 0; i < len; ++i) {
 		if (CONDENSE) {
-			item_content.appendChild(create_cat_item(i));
+			itemContent.appendChild(create_cat_item(i));
 			/*
 			section.appendChild(create_cat_item(i));
 			if (i >= 8 && i % 8 == 0) {
@@ -176,13 +178,14 @@ function click_category(cat) {
 				section.style.width = width+"%";
 			}*/
 		} else {
-			item_content.appendChild(create_cat_item(i));
+			itemContent.appendChild(create_cat_item(i));
 		}
 	}
 	if (CONDENSE) {
 		//item_content.appendChild(section);
 	}
 	document.getElementById(cat).className = "clicked_header";
+	mainContent.appendChild(itemContent)
 }
 
 // from overview page -> detailed page

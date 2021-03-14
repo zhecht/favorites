@@ -4,8 +4,10 @@
 	<div id="header">{{user}}</div>
 	{{ category_header_html | safe }}
 </div>
-<div id="item_content">
-	{{ category_html | safe }}
+<div id="main_content">
+	<div id="item_content">
+		{{ category_html | safe }}
+	</div>
 </div>
 <div id="edit_dialog">
 	<div>
@@ -25,7 +27,6 @@
 {% if condense %}
 	<style>
 		.cat_items {
-			width: 20%;
 			padding: 15px 0;
 		}
 		.cat_items span {

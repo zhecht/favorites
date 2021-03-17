@@ -1,5 +1,6 @@
 from flask import *
 from urllib.parse import urlparse
+from PIL import Image
 
 import operator
 import os
@@ -135,7 +136,10 @@ def profile_get_pic(user):
 	if ".png" in url:
 		extension = "png"
 	os.system(f"curl -sk \"{url}\" -o static/pics/{cat}/{title}.jpg")
-	#Image.open(f"static/pics/{cat}/{title}.jpg")
+	#im = Image.open(f"static/pics/{cat}/{title}.jpg")
+	#im.resize((500,))
+	#with open(f"static/pics/{cat}/{title}.jpg", "w") as fh:
+	#	im.write(fh)
 	return jsonify({"success": 1})
 
 @profile.route("/profile/<user>/get_video", methods=["POST"])

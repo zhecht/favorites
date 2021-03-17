@@ -101,7 +101,11 @@ function save_cat_item_edit() {
 }
 
 function edit_cat_item(el) {
-	EDITING = el.target.parentNode.id.split("cat_item_")[1];
+	if (el.target.className == "cat_items") {
+		EDITING = el.target.id.split("cat_item_")[1];
+	} else {
+		EDITING = el.target.parentNode.id.split("cat_item_")[1];
+	}
 	document.getElementById("darkened_back").style.display = "flex";
 	document.getElementById("edit_dialog").style.display = "flex";
 	//document.getElementById("edit_input").value = txt;

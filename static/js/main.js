@@ -1,7 +1,7 @@
 
 var DRAGGING, DROPPING;
 var CURR_CAT;
-var EDITING;
+let EDITING = "";
 var ALL_CATS = [];
 var changes = [];
 var CONDENSE = false;
@@ -181,6 +181,8 @@ function click_category(cat) {
 
 // from overview page -> detailed page
 function expand_category(cat) {
+	document.getElementById("content").style["flex-direction"] = "row";
+	document.getElementById("main_content").style["width"] = "80%";
 	document.getElementById("category_headers").style.display = "flex";
 	var cats = document.getElementById("category_headers").getElementsByTagName("span");
 	for (var i = 0; i < cats.length; ++i) {
@@ -193,8 +195,19 @@ function expand_category(cat) {
 // HANDLERS
 document.getElementById("downloadUrl").onclick = function() {
 	let url = document.getElementById("urlInput").value;
-	let title = user_data[CURR_CAT][EDITING.split("_")[0]][parseInt(EDITING.split("_")[1])];
+	let tier = EDITING.split("_")[0];
+	let num = parseInt(EDITING.split("_")[1]);
+	let title = user_data[CURR_CAT][tier][num];
 	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			console.log(tier, document.getElementById(tier).parentNode);
+			console.log(ocument.getElementById(tier).parentNode.getElementsByTagName("div")[num]);
+			let img = document.getElementById(tier).parentNode.getElementsByTagName("div")[num].getElementsByTagName("img")[0];
+			img.src = "/static/pics/"+tier+"/"+title.replace(/ |:|&|'|"|\(|\)|\./g, "")+".jpg";
+			
+		}
+	};
 	xhr.open("POST", `/profile/${user}/get_pic?url=${url}&cat=${CURR_CAT}&title=${title}`);
 	xhr.send();
 };

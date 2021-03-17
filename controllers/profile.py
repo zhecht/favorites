@@ -23,7 +23,10 @@ def format_profile_html(category, item):
 def categories_sorted_by_count(favorites):
 	cat_counts = []
 	for cat in favorites:
-		cat_counts.append((cat, len(favorites[cat])))
+		totRows = 0
+		for tier in favorites[cat]:
+			totRows += len(favorites[cat][tier])
+		cat_counts.append((cat, totRows))
 	return sorted(cat_counts, key=operator.itemgetter(1), reverse=True)
 
 def get_category_html(user, favorites):
@@ -51,11 +54,28 @@ def get_home_page_html(user, favorites):
 	for cat, cat_count in sorted_categories:
 		html += "<div class='category_box'>"
 		html += f"<div class='category_header'>{cat} ({cat_count})</div>"
-		for idx, row in enumerate(favorites[cat]):
-			row = format_overview(cat, row)
-			html += f"<div class='row'><div class='circle'>{idx+1}</div><div class='text'>{row}</div></div>"
-		html += "<div class='shadow'>Click to Expand</div>"
-		html += "</div>"
+		html += "<div style='display:flex;flex-wrap: wrap'>"
+		#for tier in favorites[cat]:
+		tiers = "infinite"
+		if "infinite" not in favorites[cat]:
+			tiers = "love"
+			if "love" not in favorites[cat]:
+				tiers = "like"
+			else:
+				continue
+		for tier in [tiers]:
+			for idx, row in enumerate(favorites[cat][tier][:12]):
+				row = format_overview(cat, row)
+				formatted = row.replace(":", "").replace("(", "").replace(")", "").replace(" ", "").replace("&","").replace("'", "").replace("\"", "").replace(".", "")
+				url = ""
+				if os.path.exists(f"static/pics/{cat}/{formatted}.jpg"):
+					url = f"/static/pics/{cat}/{formatted}.jpg"
+				elif os.path.exists(f"static/pics/{cat}/{formatted}.png"):
+					url = f"/static/pics/{cat}/{formatted}.png"
+				html += f"<img src='{url}' />"
+				#html += f"<div class='row'><div class='circle'>{idx+1}</div><div class='text'>{row}</div></div>"
+		html += "<div class='shadow'>Expand</div>"
+		html += "</div></div>"
 	html += "</div>"
 	return html
 
@@ -85,13 +105,17 @@ def parse_start(start):
 def format_data(favorites):
 	data = {}
 	for cat in favorites:
-		data[cat] = ["<br>".join(res.replace("\"", "&#34;").split("\\n")) for res in favorites[cat]]
+		data[cat] = {}
+		for tier in favorites[cat]:
+			data[cat][tier] = ["<br>".join(res.replace("\"", "&#34;").split("\\n")) for res in favorites[cat][tier]]
 	
 	data["riff_titles"] = []
 	with open("static/videos/youtube_ids") as fh:
 		youtube_ids = json.loads(fh.read())
-	for riff_id in favorites["riffs"]:
-		data["riff_titles"].append(youtube_ids[riff_id])
+
+	for tier in favorites["riffs"]:
+		for riffId in favorites["riffs"][tier]:
+			data["riff_titles"].append(youtube_ids[riffId])
 	return data
 
 @profile.route("/profile/<user>", methods=["GET"])
@@ -102,6 +126,17 @@ def profile_route(user):
 	autocomplete_arr = get_autocomplete_arr(favorites)
 	return render_template("profile.html",user=user, category_html=category_html, category_header_html=category_header_html, profile_data=format_data(favorites), autocomplete_arr=autocomplete_arr, condense=True)
 
+@profile.route("/profile/<user>/get_pic", methods=["POST"])
+def profile_get_pic(user):
+	url = request.args.get("url")
+	cat = request.args.get("cat")
+	title = request.args.get("title").replace(":", "").replace("(", "").replace(")", "").replace(" ", "").replace("&","").replace("'", "").replace("\"", "").replace(".", "")
+	extension = "jpg"
+	if ".png" in url:
+		extension = "png"
+	os.system(f"curl -sk \"{url}\" -o static/pics/{cat}/{title}.jpg")
+	#Image.open(f"static/pics/{cat}/{title}.jpg")
+	return jsonify({"success": 1})
 
 @profile.route("/profile/<user>/get_video", methods=["POST"])
 def profile_get_video(user):
@@ -142,7 +177,7 @@ def profile_get_video(user):
 def profile_add_cat(user):
 	new_cat = request.args.get("cat").replace(" ", "_").lower()
 	favorites = users_controller.read_favorites_json(user)
-	favorites[new_cat] = []
+	favorites[new_cat] = {}
 	users_controller.write_favorites_json(favorites, user)
 	return jsonify({"success": 1})
 
@@ -151,7 +186,7 @@ def profile_edit_cat_item(user):
 	cat = request.args.get("cat")
 	idx = int(request.args.get("idx"))
 	remove = request.args.get("remove")
-
+	# need tier
 	favorites = users_controller.read_favorites_json(user)
 	if remove:
 		del favorites[cat][idx]
@@ -162,18 +197,28 @@ def profile_edit_cat_item(user):
 @profile.route("/profile/<user>/reassign", methods=["POST"])
 def profile_reassign_ranks(user):
 	cat = request.args.get("cat")
-	order = request.args.get("order").split(",")
-	is_new = request.args.get("is_new")
-	new_val = request.args.get("new_val")
-	
-	# VALIDATE
+	fromId = request.args.get("fromId")
+	toId = request.args.get("toId")
+	isNew = request.args.get("isNew")
+	newVal = request.args.get("newVal")
+
 	favorites = users_controller.read_favorites_json(user)
-	new_arr = []
-	for idx in order:
-		if idx == "new":
-			new_arr.append(new_val)
+	fromTier = fromId.split("_")[-2]
+	fromVal = favorites[cat][fromTier][int(fromId.split("_")[-1])]
+	del favorites[cat][fromTier][int(fromId.split("_")[-1])]
+
+	if toId in ["infinite", "love", "like"]:
+		favorites[cat][toId].append(fromVal)
+	else:
+		toTier = toId.split("_")[-2]
+		if fromTier != toTier:
+			favorites[cat][toTier].insert(int(toId.split("_")[-1]) + 1, fromVal)
 		else:
-			new_arr.append(favorites[cat][int(idx)])
-	favorites[cat] = new_arr
+			fromNum = int(fromId.split("_")[-1])
+			toNum = int(toId.split("_")[-1])
+			if fromNum < toNum:
+				favorites[cat][toTier].insert(int(toId.split("_")[-1]) + 1, fromVal)
+			else:
+				favorites[cat][toTier].insert(int(toId.split("_")[-1]), fromVal)
 	users_controller.write_favorites_json(favorites, user)
 	return jsonify({"success": 1})

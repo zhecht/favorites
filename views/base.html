@@ -6,10 +6,27 @@
 		<link rel="stylesheet" href="/static/css/main.css" type="text/css">
 	</head>	
 	<body style="font-size: 16px;">
+		<div id="darkened_back"></div>
+		<div id="edit_dialog">
+			<div>
+				<label>URL</label>
+				<input id="urlInput" type="text" placeholder="https://" />
+				<button id="downloadUrl">Download</button>
+			</div>
+			<!--
+			<div>
+				<textarea id="edit_input"></textarea>
+			</div>
+			<div>
+				<button class="save">Save</button>
+				<button class="remove">Remove</button>
+				<button class="cancel">Cancel</button>
+			</div>
+			-->
+		</div>
 		<div id='content'>
 			{% block content %}{% endblock %}
 		</div>
-		<div id="darkened_back"></div>
 		<script src="/static/js/autocomplete.js"></script>
 		<script src="/static/js/helpers.js"></script>
 		<script src="/static/js/main.js"></script>

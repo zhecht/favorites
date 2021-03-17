@@ -6,35 +6,27 @@ var ALL_CATS = [];
 var changes = [];
 var CONDENSE = false;
 
-function reassign_ids(no_backend=undefined) {
-	var cat_items = document.getElementsByClassName("cat_items");
-	var new_order = [];
-	var new_data = [];
-	var isNew = 0, new_val = "";
-	for (var i = 0; i < cat_items.length; ++i) {
-		var sp = cat_items[i].id.split("_");
-		new_order.push(sp[sp.length - 1]);
-		if (sp[sp.length - 1] === "new") {
-			isNew = 1;
-			if (CURR_CAT == "riffs") {
-				new_val = cat_items[i].getElementsByTagName("video")[0].src.split("/");
-				new_val = new_val[new_val.length - 1].split(".mp4")[0];
-			} else {
-				new_val = cat_items[i].getElementsByTagName("div")[1].innerText;
-			}
+function reassign_ids(fromId, toId, no_backend=undefined) {
+	let tierDivs = document.getElementsByClassName("tier_div");
+	let tierOrder = {};
+	let isNew = 0, newVal = "";
+
+	for (let tierDiv of tierDivs) {
+		let tier = tierDiv.getElementsByTagName("label")[0].id;
+		let catItems = tierDiv.getElementsByClassName("cat_items");
+		let idx = 0;
+		for (let item of catItems) {
+			item.id = `cat_item_${tier}_${idx}`;
+			item.getElementsByTagName("div")[0].id = idx;
+			idx++;
 		}
-		//reset ids
-		cat_items[i].id = "cat_item_"+i;
-		cat_items[i].getElementsByTagName("span")[0].id = i;
-		cat_items[i].getElementsByClassName("circle")[0].innerText = i + 1;
-		new_data.push(cat_items[i].getElementsByTagName("div")[1].innerText);
 	}
 	if (no_backend) {
 		return;
 	}
-	var URL = "/profile/{}/reassign?cat={}&order={}&is_new={}".format(user, CURR_CAT, new_order.join(","), isNew);
+	let URL = `/profile/${user}/reassign?cat=${CURR_CAT}&isNew=${isNew}&fromId=${fromId}&toId=${toId}`;
 	if (isNew) {
-		URL += "&new_val={}".format(new_val);
+		URL += `&newVal=${newVal}`;
 	}
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", URL);
@@ -42,7 +34,7 @@ function reassign_ids(no_backend=undefined) {
 	if (isNew) {
 		reset_add_div();
 		increment_cat_count();
-		user_data[CURR_CAT] = new_data;
+		user_data[CURR_CAT] = newData;
 	}
 }
 
@@ -144,6 +136,13 @@ function add_category_item() {
 	}
 }
 
+function parseTier(label) {
+	if (label == "infinite") {
+		return "Infinite Replayability";
+	}
+	return label.charAt(0).toUpperCase()+label.substr(1);
+}
+
 function click_category(cat) {
 	if (CURR_CAT !== undefined) {
 		document.getElementById(CURR_CAT).className = "";
@@ -159,38 +158,29 @@ function click_category(cat) {
 	let itemContent = document.createElement("div");
 	itemContent.id = "item_content";
 	mainContent.innerHTML = "";
-	mainContent.appendChild(get_category_add_html());
+	//mainContent.appendChild(get_category_add_html());
 
-	//var section = document.createElement("div");
-	//section.className = "section";
-	var len = user_data[cat].length;
-	var width = 100 / Math.ceil(len / 8);
-	//section.style.width = width+"%";
-	for (var i = 0; i < len; ++i) {
-		if (CONDENSE) {
-			itemContent.appendChild(create_cat_item(i));
-			/*
-			section.appendChild(create_cat_item(i));
-			if (i >= 8 && i % 8 == 0) {
-				item_content.appendChild(section);
-				section = document.createElement("div");
-				section.className = "section";
-				section.style.width = width+"%";
-			}*/
-		} else {
-			itemContent.appendChild(create_cat_item(i));
+	for (let tier of ["infinite", "love", "like"]) {
+		if (tier in user_data[cat]) {
+			let tierDiv = document.createElement("div");
+			let label = document.createElement("label");
+			label.id = tier;
+			label.innerText = parseTier(tier);
+			tierDiv.className = "tier_div";
+			tierDiv.appendChild(label);
+			for (var i = 0; i < user_data[cat][tier].length; ++i) {
+				tierDiv.appendChild(create_cat_item(tier, i));
+			}
+			itemContent.appendChild(tierDiv);
 		}
 	}
-	if (CONDENSE) {
-		//item_content.appendChild(section);
-	}
+
 	document.getElementById(cat).className = "clicked_header";
-	mainContent.appendChild(itemContent)
+	mainContent.appendChild(itemContent);
 }
 
 // from overview page -> detailed page
 function expand_category(cat) {
-	document.getElementById("content").style.height = "auto";
 	document.getElementById("category_headers").style.display = "flex";
 	var cats = document.getElementById("category_headers").getElementsByTagName("span");
 	for (var i = 0; i < cats.length; ++i) {
@@ -201,6 +191,14 @@ function expand_category(cat) {
 
 
 // HANDLERS
+document.getElementById("downloadUrl").onclick = function() {
+	let url = document.getElementById("urlInput").value;
+	let title = user_data[CURR_CAT][EDITING.split("_")[0]][parseInt(EDITING.split("_")[1])];
+	let xhr = new XMLHttpRequest();
+	xhr.open("POST", `/profile/${user}/get_pic?url=${url}&cat=${CURR_CAT}&title=${title}`);
+	xhr.send();
+};
+
 document.getElementById("header").onclick = function() {
 	window.location.reload();
 };
@@ -227,15 +225,16 @@ for (var i = 0; i < categories.length; ++i) {
 	})(categories[i].id);
 }
 
-var item_content = document.getElementById("item_content");
-item_content.ondrop = function(event) {
+var main_content = document.getElementById("main_content");
+main_content.ondrop = function(event) {
 	drop(event);
 }
 
-item_content.ondragover = function(event) {
+main_content.ondragover = function(event) {
 	allowDrop(event);
 }
 
+/*
 var edit_dialog = document.getElementById("edit_dialog");
 edit_dialog.getElementsByClassName("save")[0].onclick = function() {
 	save_cat_item_edit();
@@ -245,4 +244,4 @@ edit_dialog.getElementsByClassName("remove")[0].onclick = function() {
 };
 edit_dialog.getElementsByClassName("cancel")[0].onclick = function() {
 	cancel_edit();
-};
+};*/

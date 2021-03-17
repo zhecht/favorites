@@ -9,16 +9,6 @@
 		{{ category_html | safe }}
 	</div>
 </div>
-<div id="edit_dialog">
-	<div>
-		<textarea id="edit_input"></textarea>
-	</div>
-	<div>
-		<button class="save">Save</button>
-		<button class="remove">Remove</button>
-		<button class="cancel">Cancel</button>
-	</div>
-</div>
 <script>
 	var user = "{{user}}";
 	var user_data = JSON.parse('{{profile_data | tojson}}');
@@ -26,12 +16,6 @@
 </script>
 {% if condense %}
 	<style>
-		.cat_items {
-			padding: 15px 0;
-		}
-		.cat_items span {
-			padding: 0 10px;
-		}
 		#cat_item_add {
 			padding: 25px 0;
 			width: 100%;
@@ -46,14 +30,6 @@
 	</style>
 {% else %}
 	<style>
-		.cat_items, #cat_item_add {
-			height: 200px;
-			width: 20%;
-		}
-		.cat_items span {
-			position: relative;
-			padding: 0 10px;
-		}
 		#cat_item_add_autocomplete {
 			width: 90%;
 			margin: 7% 0 5% 5%;

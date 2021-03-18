@@ -1,6 +1,6 @@
 from flask import *
 from urllib.parse import urlparse
-from PIL import Image
+#from PIL import Image
 
 import operator
 import os

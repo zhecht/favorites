@@ -1,6 +1,6 @@
 from flask import *
-from urllib.parse import urlparse
-#from PIL import Image
+from urllib.parse import quote_plus
+from PIL import Image
 
 import operator
 import os
@@ -62,12 +62,12 @@ def get_home_page_html(user, favorites):
 			tiers = "love"
 			if "love" not in favorites[cat]:
 				tiers = "like"
-			else:
-				continue
 		for tier in [tiers]:
-			for idx, row in enumerate(favorites[cat][tier][:12]):
-				row = format_overview(cat, row)
+			for idx, r in enumerate(favorites[cat][tier][:12]):
+				row = format_overview(cat, r)
 				formatted = row.replace(":", "").replace("(", "").replace(")", "").replace(" ", "").replace("&","").replace("'", "").replace("\"", "").replace(".", "")
+				if cat == "quotes":
+					formatted = quote_plus(r.split("|")[0]+r.split("|")[1])
 				url = ""
 				if os.path.exists(f"static/pics/{cat}/{formatted}.jpg"):
 					url = f"/static/pics/{cat}/{formatted}.jpg"
@@ -136,10 +136,15 @@ def profile_get_pic(user):
 	if ".png" in url:
 		extension = "png"
 	os.system(f"curl -sk \"{url}\" -o static/pics/{cat}/{title}.jpg")
-	#im = Image.open(f"static/pics/{cat}/{title}.jpg")
-	#im.resize((500,))
-	#with open(f"static/pics/{cat}/{title}.jpg", "w") as fh:
-	#	im.write(fh)
+	im = Image.open(f"static/pics/{cat}/{title}.jpg")
+	if cat in ["beer", "books"]:
+		ratio = float(500 / im.size[1])
+		im = im.resize((int(ratio*im.size[0]), 500))
+	else:
+		ratio = float(500 / im.size[0])
+		im = im.resize((500,int(ratio*im.size[1])))
+	im = im.convert("RGB")
+	im.save(f"static/pics/{cat}/{title}.jpg")
 	return jsonify({"success": 1})
 
 @profile.route("/profile/<user>/get_video", methods=["POST"])
@@ -177,11 +182,21 @@ def profile_get_video(user):
 		"title": vid_info["title"]
 	})
 
+@profile.route("/profile/<user>/screenshot", methods=["POST"])
+def profile_screenshot(user):
+	import base64
+	shot = request.form["screenshot"]
+	path = quote_plus(request.form["path"])
+	imgdata = base64.b64decode(shot)
+	with open(f"static/pics/quotes/{path}.png", "wb") as fh:
+		fh.write(imgdata)
+	return jsonify({"success": 1})
+
 @profile.route("/profile/<user>/add_cat", methods=["POST"])
 def profile_add_cat(user):
 	new_cat = request.args.get("cat").replace(" ", "_").lower()
 	favorites = users_controller.read_favorites_json(user)
-	favorites[new_cat] = {}
+	favorites[new_cat] = {"love": []}
 	users_controller.write_favorites_json(favorites, user)
 	return jsonify({"success": 1})
 

@@ -158,7 +158,8 @@ function click_category(cat) {
 	let itemContent = document.createElement("div");
 	itemContent.id = "item_content";
 	mainContent.innerHTML = "";
-	//mainContent.appendChild(get_category_add_html());
+	
+	//itemContent.appendChild(get_category_add_html());
 
 	for (let tier of ["infinite", "love", "like"]) {
 		if (tier in user_data[cat]) {
@@ -177,6 +178,24 @@ function click_category(cat) {
 
 	document.getElementById(cat).className = "clicked_header";
 	mainContent.appendChild(itemContent);
+
+	if (cat == "quotes") {
+		for (let item of document.getElementsByClassName("cat_items")) {
+			item.style.width = "25%";
+		}
+	} else if (cat == "riffs" || cat == "memories") {
+		for (let item of document.getElementsByClassName("cat_items")) {
+			item.style.width = "20%";
+		}
+	} else if (cat == "lyrics") {
+		for (let item of document.getElementsByClassName("cat_items")) {
+			item.style.width = "33%";
+		}
+	} else {
+		for (item of document.getElementsByClassName("cat_items")) {
+			item.style.width = "14%";
+		}
+	}
 }
 
 // from overview page -> detailed page
@@ -201,11 +220,12 @@ document.getElementById("downloadUrl").onclick = function() {
 	let xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("darkened_back").style.display = "none";
+			document.getElementById("edit_dialog").style.display = "none";
 			console.log(tier, document.getElementById(tier).parentNode);
-			console.log(ocument.getElementById(tier).parentNode.getElementsByTagName("div")[num]);
 			let img = document.getElementById(tier).parentNode.getElementsByTagName("div")[num].getElementsByTagName("img")[0];
 			img.src = "/static/pics/"+tier+"/"+title.replace(/ |:|&|'|"|\(|\)|\./g, "")+".jpg";
-			
+			document.getElementById("urlInput").value = "";
 		}
 	};
 	xhr.open("POST", `/profile/${user}/get_pic?url=${url}&cat=${CURR_CAT}&title=${title}`);
@@ -245,6 +265,40 @@ main_content.ondrop = function(event) {
 
 main_content.ondragover = function(event) {
 	allowDrop(event);
+}
+
+document.getElementById("screenshot").onclick = function() {
+	const items = document.getElementsByClassName("cat_items");
+
+	for (let item of items) {
+		html2canvas(item).then((canvas) => {
+			let base64image = canvas.toDataURL("image/png");
+			let formData = new FormData();
+			formData.append("screenshot", base64image.replace("data:image/png;base64,", ""));
+			const divs = item.getElementsByTagName("div");
+			const title = divs[0].innerText+divs[1].innerText;
+			formData.append("path", title);
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					
+				}
+			};
+			//console.log("/static/"+user+"/screenshot?data="+encodeURI(base64image))
+			//xhr.open("POST", "/static/"+user+"/screenshot?data="+encodeURI(base64image.split("base64,")[1]));
+			xhr.open("POST", "/profile/"+user+"/screenshot");
+			xhr.send(formData);
+			//window.location.href = base64image;
+		});
+	}
+}
+
+function downloadImage(data) {
+	let a = document.createElement("a");
+	a.href = data;
+	a.download = "/static/"+user+"/screenshot";
+	document.body.appendChild(a);
+	a.click();
 }
 
 /*

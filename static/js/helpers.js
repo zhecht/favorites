@@ -101,13 +101,17 @@ function save_cat_item_edit() {
 }
 
 function edit_cat_item(el) {
+	console.log("editing = ",el);
 	if (el.target.className == "cat_items") {
 		EDITING = el.target.id.split("cat_item_")[1];
+	} else if (el.target.tagName == "P") {
+		EDITING = el.target.parentNode.parentNode.id.split("cat_item_")[1];
 	} else {
 		EDITING = el.target.parentNode.id.split("cat_item_")[1];
 	}
 	document.getElementById("darkened_back").style.display = "flex";
 	document.getElementById("edit_dialog").style.display = "flex";
+	document.getElementById("urlInput").focus();
 	//document.getElementById("edit_input").value = txt;
 }
 
@@ -124,10 +128,11 @@ function create_cat_item(tier, num) {
 	div.className = "cat_items";
 	div.id = `cat_item_${tier}_${num}`;
 	div.draggable = true;
-	if (CURR_CAT == "quotes" || CURR_CAT == "lyrics" || CURR_CAT == "riffs") {
-		div.style.width = "300px";
-		div.style.height = "400px";
-		document.getElementById("cat_item_add").style.width = "300px";
+	if (CURR_CAT == "quotes" || CURR_CAT == "lyrics") {
+		div.style["text-align"] = "left";
+		//div.style.width = "300px";
+		//div.style.height = "400px";
+		//document.getElementById("cat_item_add").style.width = "300px";
 	}
 
 	div.onclick = function(event) {
@@ -144,6 +149,7 @@ function create_cat_item(tier, num) {
 	imgDiv.className = "imgDiv";
 	let img = document.createElement("img");
 	let body = document.createElement("div");
+	body.className = "itemBody";
 	body.id = num;
 	if (num === "new") {
 		let new_text = document.getElementById("cat_item_add_input").value;
@@ -193,15 +199,23 @@ function create_cat_item(tier, num) {
 	} else {
 		var data, extra_data = {};
 		if (user_data[CURR_CAT][tier][num].indexOf("|") != -1) {
-			body.style["margin"] = "10px 0";
-			body.style["overflow"] = "hidden";
-			body.style["max-height"] = "300px";
+			body.style["overflow-y"] = "auto";
+			body.style["max-height"] = "200px";
+			body.style["width"] = "80%";
 			data = user_data[CURR_CAT][tier][num].split("|");
 			if (CURR_CAT == "lyrics" || CURR_CAT == "quotes") {
 				extra_data["artist"] = data[0];
 				extra_data["source"] = data[1];
 			}
 			data = data[2].split("<br>");
+
+			img.id = num;
+			img.alt = "";
+			let c = CURR_CAT;
+			let path = encodeURIComponent(extra_data["artist"]+extra_data["source"]);
+			console.log(c, path);
+			img.src = `/static/pics/${c}/${path}.png`;
+			imgDiv.appendChild(img);
 
 			/*
 			if (CURR_CAT == "lyrics") { // Song - Artist
@@ -232,16 +246,17 @@ function create_cat_item(tier, num) {
 				if (c == "music_documentaries") {
 					c = "documentaries";
 				}
-				img.src = `/static/pics/${c}/${user_data[CURR_CAT][tier][num].replace(/ |:|&|'|"|\(|\)|\./g, "")}.jpg`
+				let path = user_data[CURR_CAT][tier][num].replace(/ |:|&|'|"|\(|\)|\./g, "");
+				img.src = `/static/pics/${c}/${path}.jpg`
 				imgDiv.appendChild(img);
 			}
 		}
 		for (var j = 0; j < data.length; ++j) {
 			var txt = data[j].replace(/&#34;/g, "\"");
-			body.appendChild(document.createTextNode(txt));
-			if (j + 1 != data.length) {
-				body.appendChild(document.createElement("br"));
-			}
+			let p = document.createElement("p");
+			p.id = num;
+			p.innerText = txt;
+			body.appendChild(p);
 		}
 	}
 	/*
@@ -259,8 +274,25 @@ function create_cat_item(tier, num) {
 	}
 	*/
 	//div.appendChild(imgDiv);
+	if (CURR_CAT == "quotes") {
+		let d = document.createElement("div");
+		d.style = "font-weight: bold; text-decoration: underline;";
+		d.innerText = extra_data["artist"];
+		let d2 = document.createElement("div");
+		d2.style = "font-style:italic;text-align:center;";
+		d2.innerText = extra_data["source"];
+		div.appendChild(d);
+		div.appendChild(d2);
+	}
 	div.appendChild(img);
 	div.appendChild(body);
+	if (CURR_CAT == "lyrics") {
+		let hr = document.createElement("hr");
+		hr.style.width = "10%";
+		let src = document.createElement("div");
+		src.innerText = extra_data["source"] + " \u25CF " + extra_data["artist"];
+		div.appendChild(src);
+	}
 	return div;
 }
 
@@ -373,5 +405,9 @@ function drag(ev) {
 	} else {
 		DRAGGING = parseInt(sp[sp.length - 1]);
 	}
-	ev.dataTransfer.setData("text", ev.target.id);
+	if (ev.target.id.split("_") == 1) {
+		ev.dataTransfer.setData("text", ev.target.parentNode.id);
+	} else {
+		ev.dataTransfer.setData("text", ev.target.id);
+	}
 }

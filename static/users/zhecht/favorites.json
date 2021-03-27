@@ -1,6 +1,6 @@
 {
     "lyrics": {
-        "infinite": [
+        "love": [
             "Pink Floyd|Time|The Sun is the same in a relative way, but you're older.\\nShorter of breath, one day closer to death.",
             "Modest Mouse|Florida|I could have my mind erased. And still not know exactly what I don't already know.",
             "The Clash|Lost in the Supermarket|I was never born, so much as I fell out.",
@@ -11,17 +11,17 @@
         ]
     },
     "quotes": {
-        "infinite": [
+        "love": [
             "Richard Feynman|Richard Feyman's Learning Strategy|Step 1: Continually ask \"Why?\"\\nStep 2: When you learn something, learn it to where you can explain it to a child.\\nStep 3: Instead of arbitrarily memorizing things, look for the explanation that makes it obvious.",
             "Bojack Horseman|Bojack Horseman S3E11|In the great grand scheme of things, we're just tiny specks that will one day be forgotten. So it doesn't matter what you did in the past, or how we'll be remembered. The only thing that matters is right now, this moment, this one spectacular moment we are sharing together.",
-            "jogging baboon|Bojack Horseman S2 Finale|It gets easier... Every day it gets a little easier... But you gotta do it every day - that's the hard part. But it does get easier.",
+            "jogging baboon|Bojack Horseman S2 Finale|It gets easier... Every day it gets a little easier\\nBut you gotta do it every day - that's the hard part. But it does get easier.",
+            "CGP Grey||Even just decelerating the negative is a positive",
+            "Victor Wooten|Tedx Talk|When we see something bad or awful or horrible in life, maybe we're just viewing it in the wrong octave",
             "Michael Scott|The Office S?E?|Limitless paper in a paperless world.",
             "Albert Einstein||I do not know with what weapons World War III will be fought, but World War IV will be fought with sticks and stones.",
             "Ryan Ray|Halt and Catch Fire S3E8|I, Ryan Ray, released the MacMillan Utility source code. I acted alone. No one helped me, and no one told me to do it. I did this because \"security\" is a myth. Contrary to what you might have heard, my friends, you are NOT safe.\\nSafety is a story. It's something we teach our children, so they can sleep at night. But we know it's not real.\\nBeware baffled humans. Beware of false prophets who will sell you a fake future - of bad teachers, corrupt leaders and dirty corporations. Beware of cops and robbers. The kind that rob your dreams. But most of all, beware of each other. Because everything's about to change.\\nThe world is going to crack wide open. There's something on the horizon - a massive connectivity. The barriers between us will disappear. And we're not ready.\\nWe'll hurt each other in new ways. We'll sell and be sold. We'll expose our most tender selves only to be mocked and destroyed. We'll be so vulnerable and we'll pay the price. We won't be able to pretend that we can protect ourselves anymore. It's a huge danger. A gigantic risk. But it's worth it.\\nIf only we can learn to take care of each other. Then this awesome, destructive new connection won't isolate us. It won't leave us in the end so.. totally alone.",
-            "CGP Grey||Even just decelerating the negative is a positive",
-            "Victor Wooten|Tedx Talk|When we see something bad or awful or horrible in life, maybe we're just viewing it in the wrong octave",
-            "Isabelle|To The Moon (1h47m)|Me, I\u2019ve been an actress all my life. Not only on-stage, but off-stage\u2026and at practically every moment. I\u2019ve gotten good at it, because acting is the only option I have. It\u2019s the only way for me to be normal. There are days when I just can\u2019t fake it anymore. And then I realize that it\u2019s too late. The Isabelle that people know of is all an act, and the real me has long become a stranger.",
-            "Act 1|Finding Paradise|Not Everyones story is meant to be told\u2026 Some of them are meant to be kept",
+            "Isabelle|To The Moon (1h47m)|Me, I've been an actress all my life. Not only on-stage, but off-stage, and at practically every moment. I've gotten good at it, because acting is the only option I have. It's the only way for me to be normal. There are days when I just can't fake it anymore. And then I realize that it's too late. The Isabelle that people know of is all an act, and the real me has long become a stranger.",
+            "Act 1|Finding Paradise|Not Everyones story is meant to be told, Some of them are meant to be kept",
             "Lenin|Nov. 1917|There are decades when nothing happens and weeks when decades happen",
             "Victor Wooten|Tedx Talk|When people put you up on a pedestal, don't come off the pedestal acting like you're humble.\\nStay up on that pedestal, because if they put you there, that's showing you how high they can see.\\nStay there and then pull them up!\\nAnd they'll grow faster than if you come down."
         ]
@@ -86,19 +86,17 @@
         ]
     },
     "podcasts": {
-        "infinite": [
+        "love": [
             "Darknet Diaries",
             "Stay Free: The Story of The Clash",
             "99% Invisible",
             "Hardcore History",
+            "How did this get made",
             "Hello Internet",
             "Office Ladies",
-            "How did this get made",
             "Radiolab",
             "Underunderstood"
-        ],
-        "love": [],
-        "like": []
+        ]
     },
     "movies": {
         "infinite": [
@@ -136,6 +134,7 @@
             "Fantastic Fungi",
             "Behind The Curve",
             "The Liberator",
+            "Operation Varsity Blues",
             "Aaron Swartz",
             "An Honest Liar",
             "The Spy",
@@ -221,7 +220,7 @@
         ]
     },
     "riffs": {
-        "infinite": [
+        "love": [
             "F7nCDrf90V8_2",
             "jftpg_6SUYk",
             "KaBBWWj5h_c_2",
@@ -229,12 +228,10 @@
             "QoI6f3drCWY",
             "-ZKUKA4WpUw",
             "VSBxCgj3Vck_2"
-        ],
-        "love": [],
-        "like": []
+        ]
     },
     "memories": {
-        "infinite": [
+        "love": [
             "Watching shooting stars with dad during camping trip",
             "Winning world series with mom coaching",
             "Living in The Lodge @ Towanda (Club year)",
@@ -244,9 +241,9 @@
     },
     "books": {
         "love": [
-            "Scar Tissue"
-        ],
-        "like": []
+            "Scar Tissue",
+            "Science as a Candle in the Dark"
+        ]
     },
     "beer": {
         "love": [
@@ -256,5 +253,13 @@
             "All Day IPA [Founders]",
             "Hamms"
         ]
-    }
+    },
+    "whiskey": {
+        "love": [
+            "1792",
+            "High West [Double Rye]",
+            "Honey Jack Daniels"
+        ]
+    },
+    "interests": {"love": []}
 }

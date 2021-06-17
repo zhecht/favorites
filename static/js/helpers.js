@@ -122,11 +122,11 @@ function hover(el) {
 	}
 }
 
-function create_cat_item(tier, num) {
+function create_cat_item(num) {
 	let div = document.createElement("div");
 	var source;
 	div.className = "cat_items";
-	div.id = `cat_item_${tier}_${num}`;
+	div.id = `cat_item_${num}`;
 	div.draggable = true;
 	if (CURR_CAT == "quotes" || CURR_CAT == "lyrics") {
 		div.style["text-align"] = "left";
@@ -198,24 +198,16 @@ function create_cat_item(tier, num) {
 		body.appendChild(document.createTextNode(new_text));
 	} else {
 		var data, extra_data = {};
-		if (user_data[CURR_CAT][tier][num].indexOf("|") != -1) {
+		if (user_data[CURR_CAT][num].indexOf("|") != -1) {
 			body.style["overflow-y"] = "auto";
 			body.style["max-height"] = "200px";
 			body.style["width"] = "80%";
-			data = user_data[CURR_CAT][tier][num].split("|");
+			data = user_data[CURR_CAT][num].split("|");
 			if (CURR_CAT == "lyrics" || CURR_CAT == "quotes") {
 				extra_data["artist"] = data[0];
 				extra_data["source"] = data[1];
 			}
 			data = data[2].split("<br>");
-
-			img.id = num;
-			img.alt = "";
-			let c = CURR_CAT;
-			let path = encodeURIComponent(extra_data["artist"]+extra_data["source"]);
-			console.log(c, path);
-			img.src = `/static/pics/${c}/${path}.png`;
-			imgDiv.appendChild(img);
 
 			/*
 			if (CURR_CAT == "lyrics") { // Song - Artist
@@ -232,21 +224,21 @@ function create_cat_item(tier, num) {
 			var vid = document.createElement("video");
 			vid.controls = true;
 			vid.volume = 0.5;
-			vid.src = "/static/videos/"+user_data[CURR_CAT][tier][num].split("\t")[0]+".mp4";
+			vid.src = "/static/videos/"+user_data[CURR_CAT][num].split("\t")[0]+".mp4";
 			vid.style.width = "250px";
 			body.appendChild(vid);
 			data = [user_data["riff_titles"][num].title];
 		} else {
-			data = user_data[CURR_CAT][tier][num].split("<br>");
+			data = user_data[CURR_CAT][num].split("<br>");
 			if (data.length == 1) {
 				// just a regular field
 				img.id = num;
-				img.alt = "";
+				img.alt = data[0];
 				let c = CURR_CAT;
 				if (c == "music_documentaries") {
 					c = "documentaries";
 				}
-				let path = user_data[CURR_CAT][tier][num].replace(/ |:|&|'|"|\(|\)|\./g, "");
+				let path = user_data[CURR_CAT][num].replace(/ |:|&|'|"|\(|\)|\./g, "");
 				img.src = `/static/pics/${c}/${path}.jpg`
 				imgDiv.appendChild(img);
 			}

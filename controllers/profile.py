@@ -24,9 +24,7 @@ def format_profile_html(category, item):
 def categories_sorted_by_count(favorites):
 	cat_counts = []
 	for cat in favorites:
-		totRows = 0
-		for tier in favorites[cat]:
-			totRows += len(favorites[cat][tier])
+		totRows = len(favorites[cat])
 		cat_counts.append((cat, totRows))
 	return sorted(cat_counts, key=operator.itemgetter(1), reverse=True)
 
@@ -38,7 +36,7 @@ def get_category_html(user, favorites):
 	#leftover_cats = list(set(ALL_CATS) - set([cat for cat in favorites]))
 	#for cat in leftover_cats:
 	#	html += "<span id='{}'>{} (0)</span>".format(cat, cat.replace("_", " "))
-	html += "<span id='add_cat_btn'>Add (+)</span>"
+	html += "<span id='add_cat_btn'>Add Category (+)</span>"
 	html += "</div>"
 	return html
 
@@ -56,25 +54,18 @@ def get_home_page_html(user, favorites):
 		html += "<div class='category_box'>"
 		html += f"<div class='category_header'>{cat} ({cat_count})</div>"
 		html += "<div style='display:flex;flex-wrap: wrap'>"
-		#for tier in favorites[cat]:
-		tiers = "infinite"
-		if "infinite" not in favorites[cat]:
-			tiers = "love"
-			if "love" not in favorites[cat]:
-				tiers = "like"
-		for tier in [tiers]:
-			for idx, r in enumerate(favorites[cat][tier][:12]):
-				row = format_overview(cat, r)
-				formatted = row.replace(":", "").replace("(", "").replace(")", "").replace(" ", "").replace("&","").replace("'", "").replace("\"", "").replace(".", "")
-				if cat == "quotes":
-					formatted = quote_plus(r.split("|")[0]+r.split("|")[1])
-				url = ""
-				if os.path.exists(f"static/pics/{cat}/{formatted}.jpg"):
-					url = f"/static/pics/{cat}/{formatted}.jpg"
-				elif os.path.exists(f"static/pics/{cat}/{formatted}.png"):
-					url = f"/static/pics/{cat}/{formatted}.png"
-				html += f"<img src='{url}' />"
-				#html += f"<div class='row'><div class='circle'>{idx+1}</div><div class='text'>{row}</div></div>"
+		for idx, r in enumerate(favorites[cat][:12]):
+			row = format_overview(cat, r)
+			formatted = row.replace(":", "").replace("(", "").replace(")", "").replace(" ", "").replace("&","").replace("'", "").replace("\"", "").replace(".", "")
+			if cat == "quotes":
+				formatted = quote_plus(r.split("|")[0]+r.split("|")[1])
+			url = ""
+			if os.path.exists(f"static/pics/{cat}/{formatted}.jpg"):
+				url = f"/static/pics/{cat}/{formatted}.jpg"
+			elif os.path.exists(f"static/pics/{cat}/{formatted}.png"):
+				url = f"/static/pics/{cat}/{formatted}.png"
+			html += f"<img src='{url}' />"
+			#html += f"<div class='row'><div class='circle'>{idx+1}</div><div class='text'>{row}</div></div>"
 		html += "<div class='shadow'>Expand</div>"
 		html += "</div></div>"
 	html += "</div>"
@@ -106,17 +97,16 @@ def parse_start(start):
 def format_data(favorites):
 	data = {}
 	for cat in favorites:
-		data[cat] = {}
+		data[cat] = []
 		for tier in favorites[cat]:
-			data[cat][tier] = ["<br>".join(res.replace("\"", "&#34;").split("\\n")) for res in favorites[cat][tier]]
+			data[cat] = ["<br>".join(res.replace("\"", "&#34;").split("\\n")) for res in favorites[cat]]
 	
 	data["riff_titles"] = []
 	with open("static/videos/youtube_ids") as fh:
 		youtube_ids = json.loads(fh.read())
 
-	for tier in favorites["riffs"]:
-		for riffId in favorites["riffs"][tier]:
-			data["riff_titles"].append(youtube_ids[riffId])
+	for riffId in favorites["riffs"]:
+		data["riff_titles"].append(youtube_ids[riffId])
 	return data
 
 @profile.route("/profile/<user>", methods=["GET"])
@@ -196,7 +186,7 @@ def profile_screenshot(user):
 def profile_add_cat(user):
 	new_cat = request.args.get("cat").replace(" ", "_").lower()
 	favorites = users_controller.read_favorites_json(user)
-	favorites[new_cat] = {"love": []}
+	favorites[new_cat] = []
 	users_controller.write_favorites_json(favorites, user)
 	return jsonify({"success": 1})
 

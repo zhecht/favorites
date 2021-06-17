@@ -158,23 +158,19 @@ function click_category(cat) {
 	let itemContent = document.createElement("div");
 	itemContent.id = "item_content";
 	mainContent.innerHTML = "";
-	
-	//itemContent.appendChild(get_category_add_html());
 
-	for (let tier of ["infinite", "love", "like"]) {
-		if (tier in user_data[cat]) {
-			let tierDiv = document.createElement("div");
-			let label = document.createElement("label");
-			label.id = tier;
-			label.innerText = parseTier(tier);
-			tierDiv.className = "tier_div";
-			tierDiv.appendChild(label);
-			for (var i = 0; i < user_data[cat][tier].length; ++i) {
-				tierDiv.appendChild(create_cat_item(tier, i));
-			}
-			itemContent.appendChild(tierDiv);
-		}
+	// add row
+	const addRow = document.createElement("div");
+	addRow.className = "addRow";
+	addRow.innerText = "Add (+)";
+	itemContent.appendChild(addRow);
+	
+	let tierDiv = document.createElement("div");
+	tierDiv.className = "tier_div";
+	for (var i = 0; i < user_data[cat].length; ++i) {
+		tierDiv.appendChild(create_cat_item(i));
 	}
+	itemContent.appendChild(tierDiv);
 
 	document.getElementById(cat).className = "clicked_header";
 	mainContent.appendChild(itemContent);
@@ -193,7 +189,7 @@ function click_category(cat) {
 		}
 	} else {
 		for (item of document.getElementsByClassName("cat_items")) {
-			item.style.width = "14%";
+			item.style.width = "15%";
 		}
 	}
 }

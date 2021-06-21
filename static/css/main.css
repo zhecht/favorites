@@ -1,13 +1,43 @@
 body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	margin: 0;
 	background: rgb(24, 26, 27);
 	color: white;
 	height: 100vh;
 }
 
+body.wait {
+	cursor: wait;
+}
+
 #content {
 	display: flex;
 	flex-direction: column;
+}
+
+h1 {
+	text-align: center;
+	margin: 0.5rem 0;
+}
+
+#favoritesDiv {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.seperator {
+	display: none;
+	height: 80px;
+	width: 5px;
+	border-radius: 15px;
+	background: green;
+}
+
+.seperator.show {
+	display: flex;
 }
 
 #sidebar {
@@ -23,13 +53,26 @@ body {
 	position: absolute;
 	display: none;
 	z-index: 2000;
-	top: 25%; left: 25%;
-	width: 50%;
+	color: black;
+	width: 35%; height: 25%;
 	flex-direction: column;
-	text-align: center;
+	background-color: #f1f1f1;
+	justify-content: space-evenly;
+	align-items: center;
 }
-#edit_input {
-	width: 300px;
+
+#edit_dialog div {
+	position: relative;
+}
+
+#edit_dialog button {
+	font-size: 16px;
+	padding: .25rem 2rem;
+}
+
+#edit_dialog input {
+	padding: 0.25rem 0;
+	width: 250px;
 }
 
 #main_content {
@@ -43,6 +86,7 @@ body {
 	height: 100%;
 	display: flex;
 	flex-direction: column;
+	overflow-y: hidden;
 }
 
 #item_content label {
@@ -60,6 +104,7 @@ body {
 	min-height: 100px;
 	justify-content: space-evenly;
 	align-items: center;
+	overflow-y: auto;
 }
 
 
@@ -122,8 +167,9 @@ body {
 	transition: 0.3s;
 	height: max-content;
 	min-height: 100px;
-	margin: 5px;
-	margin-bottom: 0;
+	margin-bottom: 1rem;
+	background-color: black;
+	color: white;
 }
 
 .cat_items:hover {
@@ -178,7 +224,7 @@ body {
 
 .addRow {
 	text-align: center;
-	padding: 1rem 0;
+	padding-bottom: 1rem;
 }
 
 .addRow:hover {
@@ -305,7 +351,7 @@ body {
 	top: 100%;
 	background-color: #f1f1f1;
 	z-index: 1000;
-	width: 50%;
+	width: 100%;
 }
 
 .autocomplete-items div {

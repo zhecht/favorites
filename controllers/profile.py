@@ -119,9 +119,16 @@ def profile_route(user):
 
 @profile.route("/profile/<user>/get_pic", methods=["POST"])
 def profile_get_pic(user):
+	adding = request.args.get("adding")
 	url = request.args.get("url")
 	cat = request.args.get("cat")
-	title = request.args.get("title").replace(":", "").replace("(", "").replace(")", "").replace(" ", "").replace("&","").replace("'", "").replace("\"", "").replace(".", "")
+	title = request.args.get("title")
+
+	if adding == "true":
+		favorites = users_controller.read_favorites_json(user)
+		favorites[cat].append(title)
+		users_controller.write_favorites_json(favorites, user)
+	title = title.replace(":", "").replace("(", "").replace(")", "").replace(" ", "").replace("&","").replace("'", "").replace("\"", "").replace(".", "")
 	extension = "jpg"
 	if ".png" in url:
 		extension = "png"
@@ -206,28 +213,18 @@ def profile_edit_cat_item(user):
 @profile.route("/profile/<user>/reassign", methods=["POST"])
 def profile_reassign_ranks(user):
 	cat = request.args.get("cat")
-	fromId = request.args.get("fromId")
-	toId = request.args.get("toId")
+	fromId = int(request.args.get("fromId"))
+	toId = int(request.args.get("toId"))
 	isNew = request.args.get("isNew")
 	newVal = request.args.get("newVal")
 
 	favorites = users_controller.read_favorites_json(user)
-	fromTier = fromId.split("_")[-2]
-	fromVal = favorites[cat][fromTier][int(fromId.split("_")[-1])]
-	del favorites[cat][fromTier][int(fromId.split("_")[-1])]
+	fromVal = favorites[cat][fromId]
+	del favorites[cat][fromId]
 
-	if toId in ["infinite", "love", "like"]:
-		favorites[cat][toId].append(fromVal)
+	if fromId < toId:
+		favorites[cat].insert(toId - 1, fromVal)
 	else:
-		toTier = toId.split("_")[-2]
-		if fromTier != toTier:
-			favorites[cat][toTier].insert(int(toId.split("_")[-1]) + 1, fromVal)
-		else:
-			fromNum = int(fromId.split("_")[-1])
-			toNum = int(toId.split("_")[-1])
-			if fromNum < toNum:
-				favorites[cat][toTier].insert(int(toId.split("_")[-1]) + 1, fromVal)
-			else:
-				favorites[cat][toTier].insert(int(toId.split("_")[-1]), fromVal)
+		favorites[cat].insert(toId, fromVal)
 	users_controller.write_favorites_json(favorites, user)
 	return jsonify({"success": 1})

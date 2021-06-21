@@ -8,31 +8,19 @@
 	<body>
 		<div id="darkened_back"></div>
 		<div id="edit_dialog">
-			<div style="display: flex; flex-direction: column;">
-				<div>
-					<label>Television</label>
-					<input />
-				</div>
-				<div>
-					<label>Image URL</label>
-					<input />
-				</div>
-				<!-- add after -->
-				<div>
-					<button id="downloadUrl">Save</button>
-					<button id="downloadUrl">Close</button>
-				</div>
-			</div>
-			<!--
-			<div>
-				<textarea id="edit_input"></textarea>
+			<div style="position: relative;">
+				<label>Television</label>
+				<input id="searchInput" />
 			</div>
 			<div>
-				<button class="save">Save</button>
-				<button class="remove">Remove</button>
-				<button class="cancel">Cancel</button>
+				<label>Image URL</label>
+				<input id="urlInput" />
 			</div>
-			-->
+			<!-- add after -->
+			<div>
+				<button id="saveItemButton">Save</button>
+				<button onclick="closeEditDialog()">Close</button>
+			</div>
 		</div>
 		<div id='content'>
 			{% block content %}{% endblock %}

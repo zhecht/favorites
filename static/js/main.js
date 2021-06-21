@@ -7,19 +7,19 @@ var changes = [];
 var CONDENSE = false;
 
 function reassign_ids(fromId, toId, no_backend=undefined) {
+	// rearrange frontend ids
 	let tierDivs = document.getElementsByClassName("tier_div");
 	let tierOrder = {};
 	let isNew = 0, newVal = "";
 
-	for (let tierDiv of tierDivs) {
-		let tier = tierDiv.getElementsByTagName("label")[0].id;
-		let catItems = tierDiv.getElementsByClassName("cat_items");
-		let idx = 0;
-		for (let item of catItems) {
-			item.id = `cat_item_${tier}_${idx}`;
-			item.getElementsByTagName("div")[0].id = idx;
-			idx++;
-		}
+	let catItems = document.getElementsByClassName("cat_items");
+	let idx = 0;
+	for (let item of catItems) {
+		item.id = `cat_item_${idx}`;
+		item.getElementsByTagName("div")[0].id = idx;
+		item.getElementsByTagName("img")[0].id = idx;
+		item.getElementsByTagName("p")[0].id = idx;
+		idx++;
 	}
 	if (no_backend) {
 		return;
@@ -159,39 +159,41 @@ function click_category(cat) {
 	itemContent.id = "item_content";
 	mainContent.innerHTML = "";
 
+	const h1 = document.createElement("h1");
+	h1.innerText = "Favorites";
+	itemContent.appendChild(h1);
+
+	// favorites row
+	const favoritesDiv = document.createElement("div");
+	favoritesDiv.id = "favoritesDiv";
+	// 7 first are the favorites
+	const len = user_data[cat].length < 7 ? user_data[cat].length : 7;
+	for (let i = 0; i < len; ++i) {
+		favoritesDiv.appendChild(createCatSeperator(i));
+		favoritesDiv.appendChild(create_cat_item(i));
+	}
+
+	itemContent.appendChild(favoritesDiv);
+
 	// add row
 	const addRow = document.createElement("div");
 	addRow.className = "addRow";
-	addRow.innerText = "Add (+)";
+	addRow.innerText = "Add Item (+)";
+	addRow.onclick = function(event) {
+		editCatItem("adding");
+	};
 	itemContent.appendChild(addRow);
 	
 	let tierDiv = document.createElement("div");
 	tierDiv.className = "tier_div";
-	for (var i = 0; i < user_data[cat].length; ++i) {
+	for (var i = 7; i < user_data[cat].length; ++i) {
+		tierDiv.appendChild(createCatSeperator(i));
 		tierDiv.appendChild(create_cat_item(i));
 	}
 	itemContent.appendChild(tierDiv);
 
 	document.getElementById(cat).className = "clicked_header";
 	mainContent.appendChild(itemContent);
-
-	if (cat == "quotes") {
-		for (let item of document.getElementsByClassName("cat_items")) {
-			item.style.width = "25%";
-		}
-	} else if (cat == "riffs" || cat == "memories") {
-		for (let item of document.getElementsByClassName("cat_items")) {
-			item.style.width = "20%";
-		}
-	} else if (cat == "lyrics") {
-		for (let item of document.getElementsByClassName("cat_items")) {
-			item.style.width = "33%";
-		}
-	} else {
-		for (item of document.getElementsByClassName("cat_items")) {
-			item.style.width = "15%";
-		}
-	}
 }
 
 // from overview page -> detailed page
@@ -206,27 +208,59 @@ function expand_category(cat) {
 	click_category(cat);
 }
 
-
 // HANDLERS
-document.getElementById("downloadUrl").onclick = function() {
+
+function saveItem() {
 	let url = document.getElementById("urlInput").value;
-	let tier = EDITING.split("_")[0];
-	let num = parseInt(EDITING.split("_")[1]);
-	let title = user_data[CURR_CAT][tier][num];
+	let adding = false;
+	let num;
+	let title;
+	console.log(EDITING);
+	if (EDITING == "adding") {
+		adding = true;
+		num = user_data[CURR_CAT].length;
+		title = document.getElementById("searchInput").value;
+	} else {
+		num = parseInt(EDITING);
+		title = user_data[CURR_CAT][num];
+	}
+
 	let xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
+			document.body.classList.remove("wait");
 			document.getElementById("darkened_back").style.display = "none";
 			document.getElementById("edit_dialog").style.display = "none";
-			console.log(tier, document.getElementById(tier).parentNode);
-			let img = document.getElementById(tier).parentNode.getElementsByTagName("div")[num].getElementsByTagName("img")[0];
-			img.src = "/static/pics/"+tier+"/"+title.replace(/ |:|&|'|"|\(|\)|\./g, "")+".jpg";
+
+			if (EDITING == "adding") {
+				user_data[CURR_CAT].push(title);
+				const div = document.getElementsByClassName("tier_div")[0];
+				div.appendChild(createCatSeperator(num));
+				div.appendChild(create_cat_item(num));
+			} else {
+				let img = document.getElementById("cat_item_"+num).getElementsByTagName("img")[0];
+				img.src = "/static/pics/"+CURR_CAT+"/"+title.replace(/ |:|&|'|"|\(|\)|\./g, "")+".jpg";
+			}
 			document.getElementById("urlInput").value = "";
 		}
 	};
-	xhr.open("POST", `/profile/${user}/get_pic?url=${url}&cat=${CURR_CAT}&title=${title}`);
-	xhr.send();
+	if (url && title) {
+		document.body.classList.add("wait");
+		xhr.open("POST", `/profile/${user}/get_pic?url=${url}&cat=${CURR_CAT}&title=${title}&adding=${adding}`);
+		xhr.send();
+	}
+}
+
+document.getElementById("saveItemButton").onclick = function() {
+	saveItem();
 };
+
+document.getElementById("urlInput").addEventListener("keyup", function(event) {
+	if (event.keyCode == 13) {
+		event.preventDefault();
+		saveItem();
+	}
+});
 
 document.getElementById("header").onclick = function() {
 	window.location.reload();
@@ -296,15 +330,3 @@ function downloadImage(data) {
 	document.body.appendChild(a);
 	a.click();
 }
-
-/*
-var edit_dialog = document.getElementById("edit_dialog");
-edit_dialog.getElementsByClassName("save")[0].onclick = function() {
-	save_cat_item_edit();
-};
-edit_dialog.getElementsByClassName("remove")[0].onclick = function() {
-	remove_cat_item();
-};
-edit_dialog.getElementsByClassName("cancel")[0].onclick = function() {
-	cancel_edit();
-};*/

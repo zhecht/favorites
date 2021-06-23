@@ -112,21 +112,22 @@ function editCatItem(el) {
 		searchInput.value = "";
 		EDITING = "adding";
 	} else if (el.target.className == "cat_items") {
-		EDITING = el.target.id.replace("cat_item_", "");
+		EDITING = el.target.id.replace("catItem", "");
 	} else if (el.target.tagName == "P") {
-		EDITING = el.target.parentNode.parentNode.id.replace("cat_item_", "");
+		EDITING = el.target.parentNode.parentNode.id.replace("catItem", "");
 	} else {
-		EDITING = el.target.parentNode.id.replace("cat_item_", "");
+		EDITING = el.target.parentNode.id.replace("catItem", "");
 	}
 	document.getElementById("darkened_back").style.display = "flex";
 	const editDialog = document.getElementById("edit_dialog");
 	editDialog.style.display = "flex";
 	editDialog.getElementsByTagName("label")[0].innerText = CURR_CAT;
 	if (EDITING != "adding") {
-		const img = document.getElementById("cat_item_"+EDITING).getElementsByTagName("img")[0];
+		const img = document.getElementById("catItem"+EDITING).getElementsByTagName("img")[0];
 		searchInput.value = img.alt;
 	}
 	init_autocomplete(searchInput, autocomplete[CURR_CAT]);
+	searchInput.focus();
 }
 
 function hover(el) {
@@ -143,19 +144,18 @@ function createCatSeperator(num) {
 	return div;
 }
 
-let DRAGOVER = -1;
-function create_cat_item(num) {
-	let div = document.createElement("div");
-	var source;
-	div.className = "cat_items";
-	div.id = `cat_item_${num}`;
-	div.draggable = true;
-	if (CURR_CAT == "quotes" || CURR_CAT == "lyrics") {
-		div.style["text-align"] = "left";
-		//div.style.width = "300px";
-		//div.style.height = "400px";
-		//document.getElementById("cat_item_add").style.width = "300px";
+function removeShowingSeperators() {
+for (let show of document.querySelectorAll(".seperator.show")) {
+		show.classList.remove("show");
 	}
+}
+
+let DRAGOVER = -1;
+function createCatItem(num) {
+	let div = document.createElement("div");
+	div.className = "cat_items";
+	div.id = `catItem${num}`;
+	div.draggable = true;
 
 	div.onclick = function(event) {
 		editCatItem(event);
@@ -167,17 +167,15 @@ function create_cat_item(num) {
 		hover(event);
 	};
 	div.ondragover = function(event) {
-		let n = this.id.split("_");
-		n = parseInt(n[n.length - 1]);
+		let n = parseInt(this.id.replace("catItem", ""));
 		if (n != DRAGGING && n != DRAGOVER) {
-			for (let show of document.querySelectorAll(".seperator.show")) {
-				show.classList.remove("show");
-			}
+			removeShowingSeperators();
 			document.getElementById("seperator"+n+"_"+(n + 1)).classList.add("show");
 			DRAGOVER = n;
 		}
 	}
 
+	let source;
 	let imgDiv = document.createElement("div");
 	imgDiv.className = "imgDiv";
 	let img = document.createElement("img");
@@ -230,28 +228,38 @@ function create_cat_item(num) {
 		}
 		body.appendChild(document.createTextNode(new_text));
 	} else {
-		var data, extra_data = {};
-		if (user_data[CURR_CAT][num].indexOf("|") != -1) {
-			body.style["overflow-y"] = "auto";
-			body.style["max-height"] = "200px";
-			body.style["width"] = "80%";
+		var data, extraData = {};
+		// Assuming Quote..Artist..Source
+		if (user_data[CURR_CAT][num].indexOf("|") >= 0) {
 			data = user_data[CURR_CAT][num].split("|");
+			const figure = document.createElement("figure");
+			let artist;
+			let source;
 			if (CURR_CAT == "lyrics" || CURR_CAT == "quotes") {
-				extra_data["artist"] = data[0];
-				extra_data["source"] = data[1];
+				artist = data[0];
+				source = data[1];
 			}
-			data = data[2].split("<br>");
-
-			/*
-			if (CURR_CAT == "lyrics") { // Song - Artist
-				span.appendChild(document.createTextNode("{}".format(data[1])));
-				span.appendChild(document.createElement("br"));
-				span.appendChild(document.createTextNode("by {}".format(data[0])));
-			} else if (CURR_CAT == "quotes") {
-				span.appendChild(document.createTextNode(data[1]));
-				source = data[0];
+			const str = data[2].split("<br>");
+			if (CURR_CAT == "quotes") {
+				const block = document.createElement("blockquote");
+				for (s of str) {
+					const d = document.createElement("div");
+					d.innerText = s;
+					block.appendChild(d);
+				}
+				const caption = document.createElement("figcaption");
+				const dash = document.createElement("div");
+				dash.innerHTML = "&mdash; "+artist;
+				caption.appendChild(dash);
+				if (source) {
+					let cite = document.createElement("cite");
+					cite.innerText = source;
+					caption.appendChild(cite);
+				}
+				figure.appendChild(block);
+				figure.appendChild(caption);
+				div.appendChild(figure);
 			}
-			span.appendChild(document.createElement("br")); */
 			
 		} else if (CURR_CAT == "riffs") {
 			var vid = document.createElement("video");
@@ -284,32 +292,9 @@ function create_cat_item(num) {
 			body.appendChild(p);
 		}
 	}
-	/*
-	if (CURR_CAT == "quotes") {
-		span.appendChild(body);
-		span.appendChild(document.createTextNode(extra_data["artist"]));
-		//span.appendChild(document.createTextNode("{} ({})".format(extra_data["artist"],extra_data["source"])));
-	} else if (CURR_CAT == "lyrics") {
-		span.appendChild(body);
-		span.appendChild(document.createTextNode(extra_data["source"]));
-		span.appendChild(document.createElement("br"));
-		span.appendChild(document.createTextNode(extra_data["artist"]));
-	} else {
-		span.appendChild(body);
+	if (CURR_CAT != "quotes") {
+		div.appendChild(img);
 	}
-	*/
-	//div.appendChild(imgDiv);
-	if (CURR_CAT == "quotes") {
-		let d = document.createElement("div");
-		d.style = "font-weight: bold; text-decoration: underline;";
-		d.innerText = extra_data["artist"];
-		let d2 = document.createElement("div");
-		d2.style = "font-style:italic;text-align:center;";
-		d2.innerText = extra_data["source"];
-		div.appendChild(d);
-		div.appendChild(d2);
-	}
-	div.appendChild(img);
 	div.appendChild(body);
 	if (CURR_CAT == "lyrics") {
 		let hr = document.createElement("hr");
@@ -320,11 +305,13 @@ function create_cat_item(num) {
 	}
 
 	if (CURR_CAT == "quotes") {
-		div.style.width = "25%";
+		div.style.width = "33%";
 	} else if (CURR_CAT == "riffs" || CURR_CAT == "memories") {
 		div.style.width = "20%";
 	} else if (CURR_CAT == "lyrics") {
 		div.style.width = "33%";
+	} else if (CURR_CAT == "books") {
+		div.style.width = "7%";
 	} else {
 		div.style.width = "12%";
 	}
@@ -366,86 +353,32 @@ function drop(ev) {
 	const sepNum = parseInt(sep.id.replace("seperator", "").split("_")[0]);
 	DROPPING = sepNum;
 
+	if (DROPPING == DRAGGING || DROPPING == DRAGGING + 1) {
+		removeShowingSeperators();
+		return;
+	}
+
 	let dragEl;
 	let dropEl;
 	// if DRAGGING into favorites from outside of favorites, kick out last
 	if (DRAGGING >= 7 && DROPPING < 7) {
-		dragEl = document.getElementById("cat_item_6");
-		dropEl = document.getElementById("cat_item_7");
+		dragEl = document.getElementById("catItem6");
+		dropEl = document.getElementById("catItem7");
 		dropEl.before(dragEl);
 	} else if (DRAGGING < 7 && DROPPING >= 7) {
 		// if DRAGGING from favorites to outside, bring in the first outstanding
-		dragEl = document.getElementById("cat_item_7");
-		dropEl = document.getElementById("cat_item_6");
+		dragEl = document.getElementById("catItem7");
+		dropEl = document.getElementById("catItem6");
 		dropEl.after(dragEl);
 	}
 
-	dragEl = document.getElementById("cat_item_"+DRAGGING);
-	dropEl = document.getElementById("cat_item_"+DROPPING);
+	dragEl = document.getElementById(`catItem${DRAGGING}`);
+	dropEl = document.getElementById(`catItem${DROPPING}`);
 	// insert the div
 	dropEl.before(dragEl);
 	// remove any seperator showing
-	for (let show of document.querySelectorAll(".seperator.show")) {
-		show.classList.remove("show");
-	}
+	removeShowingSeperators();
 	reassign_ids(DRAGGING, DROPPING);
-	return;
-
-
-	if (DRAGGING === "add") {
-		data = create_cat_item("new");
-		if (!data) { return; }
-	}
-
-	if (ev.target.tagName == "LABEL") {
-		ev.target.parentNode.appendChild(data);
-		reassign_ids(data.id, ev.target.id);
-	} else if (ev.target.className == "tier_div") {
-		ev.target.appendChild(data);
-		reassign_ids(data.id, target_id);
-	} else if (target_id !== "item_content") {
-		let tier = target_id.split("_");
-		let fromTier = data.id.split("_");
-		let div;
-		if (tier[tier.length-2] == fromTier[fromTier.length-2]) {
-			let fromNum = parseInt(fromTier[fromTier.length-1]);
-			let toNum = parseInt(tier[tier.length-1]);
-			console.log(fromNum, toNum);
-			if (fromNum < toNum) {
-				div = document.getElementById(`cat_item_${tier[tier.length-2]}_${DROPPING}`);
-			} else {
-				div = document.getElementById(`cat_item_${tier[tier.length-2]}_${DROPPING-1}`);
-			}
-		} else {
-			div = document.getElementById(`cat_item_${tier[tier.length-2]}_${DROPPING}`);
-		}
-		insertAfter(div, data);
-		reassign_ids(data.id, target_id);
-	}
-	/*
-	if (target_id !== "item_content") {
-		if (DRAGGING !== "add" && DRAGGING < DROPPING) {
-			if (target_id.startsWith("cat_item_")) {
-				insertAfter(ev.target, data);
-			} else {
-				// id is just a NUM (dropped inside a span)
-				var div = document.getElementById("cat_item_"+target_id);
-				insertAfter(div, data);
-			}
-		} else {
-			var div;
-			if (DROPPING == 0) {
-				// making #1 rank
-				div = document.getElementById("cat_item_add");
-			} else {
-				div = document.getElementById("cat_item_"+(DROPPING-1));
-			}
-			insertAfter(div, data);
-		}
-	} else {
-		ev.target.appendChild(data);
-	}
-	*/
 }
 
 function drag(ev) {

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div id="sidebar">
-	<div id="header">{{user}}</div>
+	<h2 id="header">{{user}}</h2>
 	{{ category_header_html | safe }}
 	<div style="display:none;bottom:2rem;left:50px;position: fixed;">
 		<button id="screenshot">Screenshot</button>

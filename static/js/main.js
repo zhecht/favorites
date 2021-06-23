@@ -15,7 +15,7 @@ function reassign_ids(fromId, toId, no_backend=undefined) {
 	let catItems = document.getElementsByClassName("cat_items");
 	let idx = 0;
 	for (let item of catItems) {
-		item.id = `cat_item_${idx}`;
+		item.id = `catItem${idx}`;
 		item.getElementsByTagName("div")[0].id = idx;
 		item.getElementsByTagName("img")[0].id = idx;
 		item.getElementsByTagName("p")[0].id = idx;
@@ -160,7 +160,7 @@ function click_category(cat) {
 	mainContent.innerHTML = "";
 
 	const h1 = document.createElement("h1");
-	h1.innerText = "Favorites";
+	h1.innerText = "Favorite "+CURR_CAT[0].toUpperCase()+CURR_CAT.substr(1, CURR_CAT.length);
 	itemContent.appendChild(h1);
 
 	// favorites row
@@ -170,9 +170,9 @@ function click_category(cat) {
 	const len = user_data[cat].length < 7 ? user_data[cat].length : 7;
 	for (let i = 0; i < len; ++i) {
 		favoritesDiv.appendChild(createCatSeperator(i));
-		favoritesDiv.appendChild(create_cat_item(i));
+		favoritesDiv.appendChild(createCatItem(i));
 	}
-
+	favoritesDiv.appendChild(createCatSeperator(7));
 	itemContent.appendChild(favoritesDiv);
 
 	// add row
@@ -188,20 +188,24 @@ function click_category(cat) {
 	tierDiv.className = "tier_div";
 	for (var i = 7; i < user_data[cat].length; ++i) {
 		tierDiv.appendChild(createCatSeperator(i));
-		tierDiv.appendChild(create_cat_item(i));
+		tierDiv.appendChild(createCatItem(i));
 	}
 	itemContent.appendChild(tierDiv);
 
 	document.getElementById(cat).className = "clicked_header";
 	mainContent.appendChild(itemContent);
+
+	document.getElementById("header").style["text-align"] = "center";
+	document.getElementById("header").style["margin-left"] = "0";
+	document.getElementById("sidebar").style.width = "20%";
 }
 
 // from overview page -> detailed page
 function expand_category(cat) {
 	document.getElementById("content").style["flex-direction"] = "row";
 	document.getElementById("main_content").style["width"] = "80%";
-	document.getElementById("category_headers").style.display = "flex";
-	var cats = document.getElementById("category_headers").getElementsByTagName("span");
+	document.getElementById("categoryHeaders").style.display = "flex";
+	var cats = document.getElementById("categoryHeaders").getElementsByTagName("span");
 	for (var i = 0; i < cats.length; ++i) {
 		cats[i].style.opacity = 1;
 	}
@@ -215,10 +219,10 @@ function saveItem() {
 	let adding = false;
 	let num;
 	let title;
-	console.log(EDITING);
+	const totItems = user_data[CURR_CAT].length;
 	if (EDITING == "adding") {
 		adding = true;
-		num = user_data[CURR_CAT].length;
+		num = totItems;
 		title = document.getElementById("searchInput").value;
 	} else {
 		num = parseInt(EDITING);
@@ -234,11 +238,14 @@ function saveItem() {
 
 			if (EDITING == "adding") {
 				user_data[CURR_CAT].push(title);
-				const div = document.getElementsByClassName("tier_div")[0];
+				let div = document.getElementsByClassName("tier_div")[0];
+				if (totItems < 7) {
+					div = document.getElementById("favoritesDiv");
+				}
 				div.appendChild(createCatSeperator(num));
-				div.appendChild(create_cat_item(num));
+				div.appendChild(createCatItem(num));
 			} else {
-				let img = document.getElementById("cat_item_"+num).getElementsByTagName("img")[0];
+				let img = document.getElementById("catItem"+num).getElementsByTagName("img")[0];
 				img.src = "/static/pics/"+CURR_CAT+"/"+title.replace(/ |:|&|'|"|\(|\)|\./g, "")+".jpg";
 			}
 			document.getElementById("urlInput").value = "";
@@ -246,7 +253,8 @@ function saveItem() {
 	};
 	if (url && title) {
 		document.body.classList.add("wait");
-		xhr.open("POST", `/profile/${user}/get_pic?url=${url}&cat=${CURR_CAT}&title=${title}&adding=${adding}`);
+		const encodedUrl = `/profile/${user}/get_pic?url=${encodeURIComponent(url)}&cat=${CURR_CAT}&title=${encodeURIComponent(title)}&adding=${adding}`;
+		xhr.open("POST", encodedUrl);
 		xhr.send();
 	}
 }
@@ -266,7 +274,7 @@ document.getElementById("header").onclick = function() {
 	window.location.reload();
 };
 
-var categories = document.getElementsByClassName("category_box");
+var categories = document.getElementsByClassName("categoryBox");
 for (var i = 0; i < categories.length; ++i) {
 	var cat_name = categories[i].getElementsByClassName("category_header")[0].innerText.split(" (")[0];
 	categories[i].onclick = (function(cat) {
@@ -276,7 +284,7 @@ for (var i = 0; i < categories.length; ++i) {
 	})(cat_name);
 }
 
-categories = document.getElementById("category_headers").getElementsByTagName("span");
+categories = document.getElementById("categoryHeaders").getElementsByTagName("span");
 for (var i = 0; i < categories.length; ++i) {
 	if (categories[i].id !== "add_cat_btn") {
 		ALL_CATS.push(categories[i].id);

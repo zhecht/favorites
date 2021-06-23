@@ -5,7 +5,6 @@ body {
 	margin: 0;
 	background: rgb(24, 26, 27);
 	color: white;
-	height: 100vh;
 }
 
 body.wait {
@@ -15,6 +14,7 @@ body.wait {
 #content {
 	display: flex;
 	flex-direction: column;
+	height: 100vh;
 }
 
 h1 {
@@ -26,6 +26,7 @@ h1 {
 	display: flex;
 	justify-content: space-evenly;
 	align-items: center;
+	flex-wrap: wrap;
 }
 
 .seperator {
@@ -41,8 +42,10 @@ h1 {
 }
 
 #sidebar {
-	width: 20%;
 	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
 }
 
 #screenshot {
@@ -86,7 +89,7 @@ h1 {
 	height: 100%;
 	display: flex;
 	flex-direction: column;
-	overflow-y: hidden;
+	overflow-y: auto;
 }
 
 #item_content label {
@@ -118,21 +121,20 @@ h1 {
 }
 
 #home_page_div {
-	//height: 100vh;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-evenly;
 	align-content: space-evenly;
 }
-#category_headers {
+#categoryHeaders {
 	display: none;
 	flex-wrap: wrap;
-	margin-top: 10%;
 }
 
-#category_headers span {
+#categoryHeaders span {
 	width: 100%;
-	padding: 2.5% 0 2.5% 50px;
+	padding: 0.75rem 0;
+	text-align: center;
 	animation-name: fade-in;
 	animation-duration: 2s;
 }
@@ -152,7 +154,7 @@ h1 {
   to {margin-left: -300px;}
 }
 
-#category_headers span:hover {
+#categoryHeaders span:hover {
 	cursor: pointer;
 }
 
@@ -160,7 +162,6 @@ h1 {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	text-align: center;
 	flex-wrap: wrap;
 	justify-content: center;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -168,8 +169,10 @@ h1 {
 	height: max-content;
 	min-height: 100px;
 	margin-bottom: 1rem;
+	/*
 	background-color: black;
 	color: white;
+	*/
 }
 
 .cat_items:hover {
@@ -179,6 +182,17 @@ h1 {
 
 .cat_items img {
 	width: 100%;
+	text-align: center;
+}
+
+.cat_items figure {
+	background: #eee;
+	border-radius: 1rem;
+}
+
+.cat_items figcaption {
+	margin: 0 40px;
+	margin-bottom: 16px;
 }
 
 .itemBody {
@@ -245,17 +259,16 @@ h1 {
 }
 
 #header {
-	font-size: 40px;
-	text-align: center;
+	margin-left: 2.25%;
 }
 
 #header:hover {
 	cursor: pointer;
 }
 
-.category_box {
+.categoryBox {
 	margin-top: 2rem;
-	width: 25%;
+	width: 30%;
 	min-height: 100px;
 	max-height: 250px;
 	overflow: hidden;
@@ -265,19 +278,19 @@ h1 {
 	transition: 0.3s;
 }
 
-.category_box:hover {
+.categoryBox:hover {
 	cursor: pointer;
 	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.category_box.close {
+.categoryBox.close {
 	animation-name: slide-out;
 	animation-duration: 2s;
 }
 
 
-.category_box img {
-	max-width: calc(100% / 3);
+.categoryBox img {
+	max-width: 25%;
 }
 
 .shadow {

@@ -10,7 +10,7 @@ import controllers.users as users_controller
 
 profile = Blueprint('profile', __name__, template_folder='views')
 
-ALL_CATS = ["lyrics", "quotes", "television", "podcasts", "games", "songs", "movies", "documentaries", "music_documentaries", "riffs", "books"]
+ALL_CATS = ["lyrics", "quotes", "shows", "podcasts", "games", "songs", "movies", "documentaries", "music_documentaries", "riffs", "books"]
 def format_profile_html(category, item):
 	html = "<div class='title'>{}</div>".format(item)
 	if category in ["quotes", "lyrics"]:
@@ -29,14 +29,15 @@ def categories_sorted_by_count(favorites):
 	return sorted(cat_counts, key=operator.itemgetter(1), reverse=True)
 
 def get_category_html(user, favorites):
-	html = "<div id='category_headers'>"
+	html = "<div id='categoryHeaders'>"
 	sorted_categories = categories_sorted_by_count(favorites)
+	data = []
+	html += "<span id='add_cat_btn'>Add Category (+)</span>"
 	for idx, (cat, cat_count) in enumerate(sorted_categories):
 		html += "<span id='{}'>{} ({})</span>".format(cat, cat.replace("_", " "), cat_count)
 	#leftover_cats = list(set(ALL_CATS) - set([cat for cat in favorites]))
 	#for cat in leftover_cats:
 	#	html += "<span id='{}'>{} (0)</span>".format(cat, cat.replace("_", " "))
-	html += "<span id='add_cat_btn'>Add Category (+)</span>"
 	html += "</div>"
 	return html
 
@@ -51,10 +52,10 @@ def get_home_page_html(user, favorites):
 	html = "<div id='home_page_div'>"
 	sorted_categories = categories_sorted_by_count(favorites)
 	for cat, cat_count in sorted_categories:
-		html += "<div class='category_box'>"
+		html += "<div class='categoryBox'>"
 		html += f"<div class='category_header'>{cat} ({cat_count})</div>"
 		html += "<div style='display:flex;flex-wrap: wrap'>"
-		for idx, r in enumerate(favorites[cat][:12]):
+		for idx, r in enumerate(favorites[cat][:20]):
 			row = format_overview(cat, r)
 			formatted = row.replace(":", "").replace("(", "").replace(")", "").replace(" ", "").replace("&","").replace("'", "").replace("\"", "").replace(".", "")
 			if cat == "quotes":
@@ -64,7 +65,7 @@ def get_home_page_html(user, favorites):
 				url = f"/static/pics/{cat}/{formatted}.jpg"
 			elif os.path.exists(f"static/pics/{cat}/{formatted}.png"):
 				url = f"/static/pics/{cat}/{formatted}.png"
-			html += f"<img src='{url}' />"
+			html += f"<img src='{url}' loading='lazy'/>"
 			#html += f"<div class='row'><div class='circle'>{idx+1}</div><div class='text'>{row}</div></div>"
 		html += "<div class='shadow'>Expand</div>"
 		html += "</div></div>"
@@ -119,10 +120,11 @@ def profile_route(user):
 
 @profile.route("/profile/<user>/get_pic", methods=["POST"])
 def profile_get_pic(user):
+	from urllib.parse import unquote
 	adding = request.args.get("adding")
-	url = request.args.get("url")
+	url = unquote(request.args.get("url"))
 	cat = request.args.get("cat")
-	title = request.args.get("title")
+	title = unquote(request.args.get("title"))
 
 	if adding == "true":
 		favorites = users_controller.read_favorites_json(user)

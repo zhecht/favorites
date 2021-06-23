@@ -36,7 +36,7 @@ def scrape_imdb(filename, title_type, start=1):
 			os.system(f"curl -ks \"{url}\" -o static/pics/{filename}/{formattedShow}.jpg")
 		start += 50
 		if start >= 1001 and start % 1001 == 0:
-			with open("static/scrape/{}.txt".format("television" if filename == "tv" else filename), "w") as fh:
+			with open("static/scrape/{}.txt".format("shows" if filename == "tv" else filename), "w") as fh:
 				fh.write("\n".join(all_tv))
 
 	with open("static/scrape/{}.txt".format(filename), "w") as fh:

@@ -240,24 +240,23 @@ function createCatItem(num) {
 				source = data[1];
 			}
 			const str = data[2].split("<br>");
-			if (CURR_CAT == "quotes") {
-				const block = document.createElement("blockquote");
-				for (s of str) {
-					const d = document.createElement("div");
-					d.innerText = s;
-					block.appendChild(d);
-				}
-				const caption = document.createElement("figcaption");
-				const dash = document.createElement("div");
-				dash.innerHTML = "&mdash; "+artist;
-				caption.appendChild(dash);
+			if (CURR_CAT == "quotes" || CURR_CAT == "lyrics") {
+				const header = document.createElement("figcaption");
+				header.appendChild(document.createTextNode(artist));
 				if (source) {
 					let cite = document.createElement("cite");
 					cite.innerText = source;
-					caption.appendChild(cite);
+					header.appendChild(cite);
 				}
+
+				const block = document.createElement("blockquote");
+				for (s of str) {
+					const d = document.createElement("div");
+					d.innerText = s.replace(/&#34;/g, "\"");
+					block.appendChild(d);
+				}
+				figure.appendChild(header);
 				figure.appendChild(block);
-				figure.appendChild(caption);
 				div.appendChild(figure);
 			}
 			
@@ -267,8 +266,8 @@ function createCatItem(num) {
 			vid.volume = 0.5;
 			vid.src = "/static/videos/"+user_data[CURR_CAT][num].split("\t")[0]+".mp4";
 			vid.style.width = "250px";
-			body.appendChild(vid);
-			data = [user_data["riff_titles"][num].title];
+			div.appendChild(vid);
+			//data = [user_data["riff_titles"][num].title];
 		} else {
 			data = user_data[CURR_CAT][num].split("<br>");
 			if (data.length == 1) {
@@ -284,32 +283,19 @@ function createCatItem(num) {
 				imgDiv.appendChild(img);
 			}
 		}
-		for (var j = 0; j < data.length; ++j) {
-			var txt = data[j].replace(/&#34;/g, "\"");
-			let p = document.createElement("p");
-			p.id = num;
-			p.innerText = txt;
-			body.appendChild(p);
-		}
 	}
-	if (CURR_CAT != "quotes") {
+	if (!(CURR_CAT in ["lyrics", "quotes", "riffs"])) {
 		div.appendChild(img);
 	}
 	div.appendChild(body);
-	if (CURR_CAT == "lyrics") {
-		let hr = document.createElement("hr");
-		hr.style.width = "10%";
-		let src = document.createElement("div");
-		src.innerText = extra_data["source"] + " \u25CF " + extra_data["artist"];
-		div.appendChild(src);
-	}
 
-	if (CURR_CAT == "quotes") {
-		div.style.width = "33%";
-	} else if (CURR_CAT == "riffs" || CURR_CAT == "memories") {
+	if (CURR_CAT == "quotes" || CURR_CAT == "lyrics") {
+		div.style.width = "23%";
+		div.style["border-radius"] = "1rem";
+	} else if (CURR_CAT == "riffs") {
+		// nada
+	} else if (CURR_CAT == "memories") {
 		div.style.width = "20%";
-	} else if (CURR_CAT == "lyrics") {
-		div.style.width = "33%";
 	} else if (CURR_CAT == "books") {
 		div.style.width = "7%";
 	} else {

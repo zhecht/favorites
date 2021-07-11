@@ -59,7 +59,8 @@ def get_home_page_html(user, favorites):
 			row = format_overview(cat, r)
 			formatted = row.replace(":", "").replace("(", "").replace(")", "").replace(" ", "").replace("&","").replace("'", "").replace("\"", "").replace(".", "")
 			if cat == "quotes":
-				formatted = quote_plus(r.split("|")[0]+r.split("|")[1])
+				p = r.split("|")[0]+" "+r.split("|")[1]
+				formatted = quote_plus(p)
 			url = ""
 			if os.path.exists(f"static/pics/{cat}/{formatted}.jpg"):
 				url = f"/static/pics/{cat}/{formatted}.jpg"

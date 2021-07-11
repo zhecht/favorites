@@ -144,14 +144,15 @@ function parseTier(label) {
 }
 
 function click_category(cat) {
-	if (CURR_CAT !== undefined) {
-		document.getElementById(CURR_CAT).className = "";
-	}
 	if (cat === "add_cat_btn") {
 		add_category();
 		return;
 	} else if (CURR_CAT === cat) {
 		return;
+	}
+
+	if (CURR_CAT !== undefined) {
+		document.getElementById(CURR_CAT).className = "";
 	}
 	CURR_CAT = cat;
 	let mainContent = document.getElementById("main_content");
@@ -176,13 +177,15 @@ function click_category(cat) {
 	itemContent.appendChild(favoritesDiv);
 
 	// add row
-	const addRow = document.createElement("div");
-	addRow.className = "addRow";
-	addRow.innerText = "Add Item (+)";
-	addRow.onclick = function(event) {
-		editCatItem("adding");
-	};
-	itemContent.appendChild(addRow);
+	if (cat != "quotes") {
+		const addRow = document.createElement("div");
+		addRow.className = "addRow";
+		addRow.innerText = "Add Item (+)";
+		addRow.onclick = function(event) {
+			editCatItem("adding");
+		};
+		itemContent.appendChild(addRow);
+	}
 	
 	let tierDiv = document.createElement("div");
 	tierDiv.className = "tier_div";
@@ -313,8 +316,8 @@ document.getElementById("screenshot").onclick = function() {
 			let base64image = canvas.toDataURL("image/png");
 			let formData = new FormData();
 			formData.append("screenshot", base64image.replace("data:image/png;base64,", ""));
-			const divs = item.getElementsByTagName("div");
-			const title = divs[0].innerText+divs[1].innerText;
+			const caption = item.getElementsByTagName("figcaption");
+			const title = caption[0].innerText.replace("\n", " ");
 			formData.append("path", title);
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function() {

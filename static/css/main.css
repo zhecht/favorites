@@ -126,9 +126,18 @@ h1 {
 	justify-content: space-evenly;
 	align-content: space-evenly;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#categoryHeaders::-webkit-scrollbar {
+  display: none;
+}
+
 #categoryHeaders {
 	display: none;
 	flex-wrap: wrap;
+	overflow-y: auto;
+	-ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 #categoryHeaders span {
@@ -175,6 +184,10 @@ h1 {
 	*/
 }
 
+#quotes .cat_items {
+	border-radius: 1rem;
+}
+
 .cat_items:hover {
 	cursor: pointer;
 	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
@@ -188,17 +201,21 @@ h1 {
 .cat_items figure {
 	background: #eee;
 	border-radius: 1rem;
+	margin: 0;
 }
 
 .cat_items figcaption {
-	margin: 0 40px;
-	margin-bottom: 16px;
+	margin-top: 16px;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	
 }
 
-.itemBody {
-	width: 100%;
-	text-align: center;
-	display: none;
+.cat_items blockquote {
+	margin: 16px 20px;
+	max-height: 150px;
+	overflow-y: auto;
 }
 
 #cat_item_autocomplete_div {

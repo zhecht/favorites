@@ -64,21 +64,28 @@ function save_category() {
 	xhr.send();
 
 	var cat_id = val.replace(" ", "_").toLowerCase();
-	var span = document.createElement("span");
-	span.id = cat_id;
-	span.innerText = "{} (0)".format(val);
-	span.onclick = (function(cat) {
+	var div = document.createElement("div");
+	const badge = document.createElement("span");
+	badge.className = "badge";
+	badge.innerText = "0";
+	div.id = cat_id;
+	div.onclick = (function(cat) {
 		return function() {
 			click_category(cat)
 		}
 	})(cat_id);
+	div.appendChild(badge);
+	const name = document.createElement("p");
+	name.innerText = val;
+	div.appendChild(name);
+	div.appendChild(document.createTextNode(val));
 	var last_cat = document.getElementById(ALL_CATS[ALL_CATS.length - 1]);
 	ALL_CATS.push(cat_id);
 	user_data[cat_id] = [];
 	autocomplete[cat_id] = [];
 
 	document.getElementById("add_cat_span").remove();
-	insertAfter(last_cat, span);
+	insertAfter(last_cat, div);
 	document.getElementById(cat_id).click();
 }
 
@@ -160,10 +167,6 @@ function click_category(cat) {
 	itemContent.id = "item_content";
 	mainContent.innerHTML = "";
 
-	const h1 = document.createElement("h1");
-	h1.innerText = "Favorite "+CURR_CAT[0].toUpperCase()+CURR_CAT.substr(1, CURR_CAT.length);
-	itemContent.appendChild(h1);
-
 	// favorites row
 	const favoritesDiv = document.createElement("div");
 	favoritesDiv.id = "favoritesDiv";
@@ -205,8 +208,6 @@ function click_category(cat) {
 
 // from overview page -> detailed page
 function expand_category(cat) {
-	document.getElementById("content").style["flex-direction"] = "row";
-	document.getElementById("main_content").style["width"] = "80%";
 	document.getElementById("categoryHeaders").style.display = "flex";
 	var cats = document.getElementById("categoryHeaders").getElementsByTagName("span");
 	for (var i = 0; i < cats.length; ++i) {
@@ -273,7 +274,7 @@ document.getElementById("urlInput").addEventListener("keyup", function(event) {
 	}
 });
 
-document.getElementById("header").onclick = function() {
+document.getElementById("header").getElementsByTagName("h1")[0].onclick = function() {
 	window.location.reload();
 };
 
@@ -287,7 +288,7 @@ for (var i = 0; i < categories.length; ++i) {
 	})(cat_name);
 }
 
-categories = document.getElementById("categoryHeaders").getElementsByTagName("span");
+categories = document.getElementById("categoryHeaders").getElementsByTagName("div");
 for (var i = 0; i < categories.length; ++i) {
 	if (categories[i].id !== "add_cat_btn") {
 		ALL_CATS.push(categories[i].id);

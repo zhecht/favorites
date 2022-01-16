@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+<div id="header">
+	<h1>{{user}}</h1>
+	{{ category_header_html | safe }}
+</div>
+<!--
 <div id="sidebar">
 	<h2 id="header">{{user}}</h2>
 	{{ category_header_html | safe }}
@@ -7,6 +12,7 @@
 		<button id="screenshot">Screenshot</button>
 	</div>
 </div>
+-->
 <div id="main_content">
 	<div id="item_content">
 		{{ category_html | safe }}

@@ -8,7 +8,6 @@ var CONDENSE = false;
 
 function reassign_ids(fromId, toId, no_backend=undefined) {
 	// rearrange frontend ids
-	let tierDivs = document.getElementsByClassName("tier_div");
 	let tierOrder = {};
 	let isNew = 0, newVal = "";
 
@@ -18,7 +17,6 @@ function reassign_ids(fromId, toId, no_backend=undefined) {
 		item.id = `catItem${idx}`;
 		item.getElementsByTagName("div")[0].id = idx;
 		item.getElementsByTagName("img")[0].id = idx;
-		item.getElementsByTagName("p")[0].id = idx;
 		idx++;
 	}
 	if (no_backend) {
@@ -183,7 +181,7 @@ function click_category(cat) {
 	if (cat != "quotes") {
 		const addRow = document.createElement("div");
 		addRow.className = "addRow";
-		addRow.innerText = "Add Item (+)";
+		addRow.innerText = "Add Item [+]";
 		addRow.onclick = function(event) {
 			editCatItem("adding");
 		};
@@ -191,7 +189,7 @@ function click_category(cat) {
 	}
 	
 	let tierDiv = document.createElement("div");
-	tierDiv.className = "tier_div";
+	tierDiv.id = "tier_div";
 	for (var i = 7; i < user_data[cat].length; ++i) {
 		tierDiv.appendChild(createCatSeperator(i));
 		tierDiv.appendChild(createCatItem(i));
@@ -201,9 +199,6 @@ function click_category(cat) {
 	document.getElementById(cat).className = "clicked_header";
 	mainContent.appendChild(itemContent);
 
-	document.getElementById("header").style["text-align"] = "center";
-	document.getElementById("header").style["margin-left"] = "0";
-	document.getElementById("sidebar").style.width = "20%";
 }
 
 // from overview page -> detailed page
@@ -242,12 +237,14 @@ function saveItem() {
 
 			if (EDITING == "adding") {
 				user_data[CURR_CAT].push(title);
-				let div = document.getElementsByClassName("tier_div")[0];
+				let div = document.getElementById("tier_div");
 				if (totItems < 7) {
 					div = document.getElementById("favoritesDiv");
 				}
-				div.appendChild(createCatSeperator(num));
-				div.appendChild(createCatItem(num));
+
+				div.append(createCatSeperator(num));
+				div.append(createCatItem(num));
+				document.getElementById("tier_div").scrollTo(0, document.body.scrollHeight)
 			} else {
 				let img = document.getElementById("catItem"+num).getElementsByTagName("img")[0];
 				img.src = "/static/pics/"+CURR_CAT+"/"+title.replace(/ |:|&|'|"|\(|\)|\./g, "")+".jpg";
@@ -309,6 +306,7 @@ main_content.ondragover = function(event) {
 	allowDrop(event);
 }
 
+/*
 document.getElementById("screenshot").onclick = function() {
 	const items = document.getElementsByClassName("cat_items");
 
@@ -334,6 +332,7 @@ document.getElementById("screenshot").onclick = function() {
 		});
 	}
 }
+*/
 
 function downloadImage(data) {
 	let a = document.createElement("a");

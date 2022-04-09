@@ -1,9 +1,14 @@
 
+:root {
+	--secondary-background:  #42414d;
+}
 
 #content {
 	display: flex;
+	overflow-y: hidden;
 	flex-direction: column;
 	height: 100vh;
+	width: 100%;
 }
 
 #header {
@@ -41,18 +46,90 @@
 	text-align: center;
 	animation-name: fade-in;
 	animation-duration: 2s;
+	padding: 5px 10px 0px 10px;
+}
+
+.categoryBox {
+	margin-top: 2rem;
+	width: 30%;
+	min-height: 100px;
+	max-height: 250px;
+	overflow: hidden;
+	position: relative;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	background-color: var(--secondary-background);
+	transition: 0.3s;
+}
+
+.categoryBox:hover {
+	cursor: pointer;
+	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.category_header {
+	text-align: center;
+	padding: 5px;
+	font-weight: bold;
 }
 
 #main_content {
-	width: 100%; height: 100vh;
-	overflow: auto;
-	color: black;
-	background-color: white;
+	width: 100%;
+	height: 100vh;
+	background-color: rgb(43, 42, 51);
 }
 
 #item_content {
 	height: 100%;
-	margin-top: 20px;
 	display: flex;
 	flex-direction: column;
+}
+
+#favoritesDiv {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	flex-wrap: wrap;
+	padding-top: 1rem;
+}
+
+#tier_div {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	min-height: 100px;
+	justify-content: space-evenly;
+	align-items: center;
+	overflow-y: auto;
+	padding-bottom: 150px;
+}
+
+.shadow {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 40px;
+	background-color: rgba(0,0,0,0.9);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+}
+
+.clicked_header {
+	background: blue;
+	color: white;
+	border-radius: 8px 8px 0 0;
+	background-color: white;
+	color: black;
+}
+
+.addRow {
+	text-align: center;
+	padding-top: 1rem;
+	font-weight: bold;
+}
+
+.addRow:hover {
+	cursor: pointer;
 }

@@ -16,13 +16,6 @@ h1 {
 	margin: 0.5rem 0;
 }
 
-#favoritesDiv {
-	display: flex;
-	justify-content: space-evenly;
-	align-items: center;
-	flex-wrap: wrap;
-}
-
 .seperator {
 	display: none;
 	height: 80px;
@@ -80,16 +73,6 @@ h1 {
 	font-size: 18px;
 }
 
-.tier_div {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	min-height: 100px;
-	justify-content: space-evenly;
-	align-items: center;
-}
-
-
 #darkened_back {
 	position: absolute;
 	width:100%; height:100%;
@@ -135,11 +118,8 @@ h1 {
 	transition: 0.3s;
 	height: max-content;
 	min-height: 100px;
-	margin-bottom: 1rem;
-	/*
-	background-color: black;
-	color: white;
-	*/
+	margin-top: 1rem;
+	background-color: var(--secondary-background);
 }
 
 #quotes .cat_items {
@@ -152,12 +132,12 @@ h1 {
 }
 
 .cat_items img {
-	width: 100%;
+	max-width: 90%;
+	max-height: 100px;
 	text-align: center;
 }
 
 .cat_items figure {
-	background: #eee;
 	border-radius: 1rem;
 	margin: 0;
 }
@@ -211,15 +191,6 @@ h1 {
 	margin-left:5px;
 }
 
-.addRow {
-	text-align: center;
-	padding-bottom: 1rem;
-}
-
-.addRow:hover {
-	cursor: pointer;
-}
-
 #add_text {
 	text-align: center;
 }
@@ -239,23 +210,6 @@ h1 {
 	color: green;
 }
 
-.categoryBox {
-	margin-top: 2rem;
-	width: 30%;
-	min-height: 100px;
-	max-height: 250px;
-	overflow: hidden;
-	position: relative;
-	border: 1px solid;
-	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-	transition: 0.3s;
-}
-
-.categoryBox:hover {
-	cursor: pointer;
-	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-}
-
 .categoryBox.close {
 	animation-name: slide-out;
 	animation-duration: 2s;
@@ -264,25 +218,6 @@ h1 {
 
 .categoryBox img {
 	max-width: 25%;
-}
-
-.shadow {
-	position: absolute;
-	bottom: 0;
-	width: 100%; height: 30px;
-	background-color: rgba(0,0,0,0.8);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	color: white;
-}
-
-
-.category_header {
-	text-align: center;
-	border-bottom: 1px solid;
-	padding: 5px;
-	font-weight: bold;
 }
 
 .row {
@@ -317,11 +252,6 @@ h1 {
 .circle_container {
 	display: flex;
 	line-height: 30px;
-}
-
-.clicked_header {
-	background: blue;
-	color: white;
 }
 
 .autocomplete {

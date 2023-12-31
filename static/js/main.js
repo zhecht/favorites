@@ -181,6 +181,10 @@ function click_category(cat) {
 	if (cat != "quotes") {
 		const addRow = document.createElement("div");
 		addRow.className = "addRow";
+
+		//const search = document.createElement("input");
+		//search.placeholder = "Search Item";
+		//addRow.appendChild(search);
 		addRow.innerText = "Add Item [+]";
 		addRow.onclick = function(event) {
 			editCatItem("adding");

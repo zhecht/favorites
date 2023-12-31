@@ -118,8 +118,11 @@ h1 {
 	transition: 0.3s;
 	height: max-content;
 	min-height: 100px;
-	margin-top: 1rem;
 	background-color: var(--secondary-background);
+}
+
+#tier_div .cat_items {
+	margin-top: 0.5rem;
 }
 
 #quotes .cat_items {
@@ -133,7 +136,7 @@ h1 {
 
 .cat_items img {
 	max-width: 90%;
-	max-height: 100px;
+	//max-height: 100px;
 	text-align: center;
 }
 

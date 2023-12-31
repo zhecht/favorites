@@ -35,9 +35,6 @@ def get_category_html(user, favorites):
 	#html += "<span id='add_cat_btn'>Add Category (+)</span>"
 	for idx, (cat, cat_count) in enumerate(sorted_categories):
 		html += f"<div id='{cat}'><span class='badge'>{cat_count}</span><span>{cat.replace('_',' ')}</span></div>"
-	#leftover_cats = list(set(ALL_CATS) - set([cat for cat in favorites]))
-	#for cat in leftover_cats:
-	#	html += "<span id='{}'>{} (0)</span>".format(cat, cat.replace("_", " "))
 	html += "</div>"
 	return html
 

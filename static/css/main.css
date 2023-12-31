@@ -1,6 +1,6 @@
 
 :root {
-	--secondary-background:  #42414d;
+	--secondary-background: #42414d;
 }
 
 #content {
@@ -29,7 +29,7 @@
 	color: #fff;
 	text-align: center;
 	white-space: nowrap;
-	background-color: #777;
+	background-color: var(--secondary-background);
 	border-radius: 10px;
 }
 
@@ -46,7 +46,7 @@
 	text-align: center;
 	animation-name: fade-in;
 	animation-duration: 2s;
-	padding: 5px 10px 0px 10px;
+	padding: 5px 10px 3px 10px;
 }
 
 .categoryBox {
@@ -126,7 +126,6 @@
 
 .addRow {
 	text-align: center;
-	padding-top: 1rem;
 	font-weight: bold;
 }
 
